@@ -1,0 +1,12 @@
+version: '3.9'
+services:
+  node:
+    build:
+      context: ./
+      dockerfile: Dockerfile.development
+    container_name: 'gawdiboard-next'
+    volumes:
+      - .:/app
+    ports:
+      - '3000:3000'
+    tty: true

@@ -1,0 +1,14 @@
+FROM node:16.13.0-alpine3.14
+
+RUN apk add --no-cache libc6-compat git
+
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
+
+USER nextjs
+
+EXPOSE 3000
+ENV PORT 3000
+
+WORKDIR /app
+CMD ["node_modules/.bin/next", "dev"]
