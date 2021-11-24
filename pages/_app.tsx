@@ -1,4 +1,14 @@
 import type { AppProps } from 'next/app';
+import { setUpWorker } from '../mocks/browser';
+
+if (process.env.NODE_ENV === 'development') {
+  if (typeof window !== 'undefined') {
+    // dynamic importをするとmockより先にリクエストが飛ぶのでしてない。
+    // 本番では不要なsetUpWorkerがビルドに含まれてしまうけどいい方法が思い浮かばなかった。
+    // 参考:https://mswjs.io/docs/recipes/deferred-mounting
+    setUpWorker().start({ onUnhandledRequest: 'bypass' });
+  }
+}
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
