@@ -8,8 +8,12 @@ describe('Home', () => {
     const welcome = screen.getByText('Gawdi Boardへようこそ');
     expect(welcome).toBeInTheDocument();
   });
-  it('1 = 1', () => {
-    const a: Record<string, number> = { i: 1 };
-    expect(a.i).toBe(1);
+
+  // 後で消してください
+  it('APIを呼べる', async () => {
+    const res = await fetch('/mock-test');
+    const data = await res.json();
+
+    expect(data.msg).toBe('hello world');
   });
 });
