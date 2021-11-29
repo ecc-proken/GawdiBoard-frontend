@@ -1,8 +1,10 @@
 {
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "jest", "testing-library"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:jest/recommended",
+    "plugin:testing-library/react",
     "next/core-web-vitals",
     "prettier"
   ]
