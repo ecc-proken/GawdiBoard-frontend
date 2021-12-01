@@ -5,7 +5,7 @@ import { jsonClient } from '../utils/httpClient';
 
 const Home: NextPage = () => {
   const { data, error, isLoading } = useQuery('test', () =>
-    jsonClient('/mock-test', {
+    jsonClient('/success', {
       params: { a: 'hello', b: ['1', '2', '3'] },
     })
   );
@@ -19,7 +19,7 @@ const Home: NextPage = () => {
       <main>
         <h1>Gawdi Boardへようこそ</h1>
         {isLoading && <p>ロード中だよ...</p>}
-        {data && <p>{data.msg}</p>}
+        {data && <p>{data.message}</p>}
         {error && (
           <p role="alert" className="error">
             エラーが起こったよ
