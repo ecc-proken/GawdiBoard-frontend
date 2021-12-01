@@ -1,20 +1,14 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useQuery } from 'react-query';
+import { jsonClient } from '../utils/httpClient';
 
 const Home: NextPage = () => {
-  const { data, error, isLoading } = useQuery('test', async () => {
-    const res = await fetch('/mock-test').catch((error) => {
-      throw new Error('通信中に問題が起こりました。詳細: ' + error.message);
-    });
-
-    if (!res.ok) {
-      const data = await res.json();
-      throw new Error(data.message ?? 'エラーがおこったよ');
-    }
-
-    return res.json();
-  });
+  const { data, error, isLoading } = useQuery('test', () =>
+    jsonClient('/mock-test', {
+      params: { a: 'hello', b: ['1', '2', '3'] },
+    })
+  );
 
   return (
     <div>
