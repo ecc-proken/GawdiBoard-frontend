@@ -1,6 +1,6 @@
 import type { AppProps } from 'next/app';
 import { setUpWorker } from '../mocks/browser';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { AppProvider } from '../contexts/AppProvider';
 
 if (process.env.NODE_ENV === 'development') {
   if (typeof window !== 'undefined') {
@@ -11,11 +11,9 @@ if (process.env.NODE_ENV === 'development') {
   }
 }
 
-const queryClient = new QueryClient();
-
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <QueryClientProvider client={queryClient}>
+    <AppProvider>
       <Component {...pageProps} />
       <style global jsx>
         {`
@@ -59,7 +57,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           }
         `}
       </style>
-    </QueryClientProvider>
+    </AppProvider>
   );
 }
 
