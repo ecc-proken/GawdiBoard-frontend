@@ -1,10 +1,10 @@
-import type { NextPage } from 'next';
-import Head from 'next/head';
+import type { ReactElement } from 'react';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import * as yup from 'yup';
+import Layout from '../components/layouts/Layout';
 import { jsonClient } from '../utils/httpClient';
 
 type FormValue = {
@@ -17,7 +17,7 @@ const schema = yup
   })
   .required();
 
-const Home: NextPage = () => {
+function HomePage() {
   const [keyword, setKeyword] = useState('');
   const { data, error, isLoading } = useQuery(
     'test',
@@ -43,25 +43,19 @@ const Home: NextPage = () => {
 
   return (
     <div>
-      <Head>
-        <title>Gawdi Board</title>
-        <meta name="description" content="ECCコン専用の掲示板" />
-      </Head>
-      <main>
-        <h1>Gawdi Boardへようこそ</h1>
-        <form onSubmit={onSubmit}>
-          <input {...register('keyword')}></input>
-          {errors.keyword && <span>{errors.keyword.message}</span>}
-          <button>押す</button>
-        </form>
-        {isLoading && <p>ロード中だよ...</p>}
-        {data && <p>{data.message}</p>}
-        {error && (
-          <p role="alert" className="error">
-            エラーが起こったよ
-          </p>
-        )}
-      </main>
+      <h1>Gawdi Boardへようこそ</h1>
+      <form onSubmit={onSubmit}>
+        <input {...register('keyword')}></input>
+        {errors.keyword && <span>{errors.keyword.message}</span>}
+        <button>押す</button>
+      </form>
+      {isLoading && <p>ロード中だよ...</p>}
+      {data && <p>{data.message}</p>}
+      {error && (
+        <p role="alert" className="error">
+          エラーが起こったよ
+        </p>
+      )}
       <footer>ここはフッターかもしれないよ</footer>
       <style jsx>{`
         h1 {
@@ -73,6 +67,10 @@ const Home: NextPage = () => {
       `}</style>
     </div>
   );
+}
+
+HomePage.getLayout = (page: ReactElement) => {
+  return <Layout title="ホーム">{page}</Layout>;
 };
 
-export default Home;
+export default HomePage;
