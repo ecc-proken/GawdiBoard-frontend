@@ -1,6 +1,16 @@
 import type { AppProps } from 'next/app';
+import type { NextPage } from 'next';
+import type { ReactElement, ReactNode } from 'react';
 import { setUpWorker } from '../mocks/browser';
 import { AppProvider } from '../contexts/AppProvider';
+
+type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
 
 if (process.env.NODE_ENV === 'development') {
   if (typeof window !== 'undefined') {
@@ -11,10 +21,12 @@ if (process.env.NODE_ENV === 'development') {
   }
 }
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+  const getLayout = Component.getLayout ?? ((page) => page);
+
   return (
     <AppProvider>
-      <Component {...pageProps} />
+      {getLayout(<Component {...pageProps} />)}
       <style global jsx>
         {`
           *,
