@@ -1,6 +1,6 @@
-import { jsonClient } from '../httpClient';
-import { server } from '../../mocks/server';
 import { rest } from 'msw';
+import { server } from '../../mocks/server';
+import { jsonClient } from '../httpClient';
 
 describe('jsonClient', () => {
   it('APIを呼べる', async () => {

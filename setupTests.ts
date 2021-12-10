@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import 'whatwg-fetch';
-import { server } from './mocks/server';
 import { setLogger } from 'react-query';
+import { server } from './mocks/server';
 
 beforeAll(() => server.listen());
 

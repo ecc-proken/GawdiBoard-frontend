@@ -1,8 +1,8 @@
-import type { AppProps } from 'next/app';
 import type { NextPage } from 'next';
+import type { AppProps } from 'next/app';
 import type { ReactElement, ReactNode } from 'react';
-import { setUpWorker } from '../mocks/browser';
 import { AppProvider } from '../contexts/AppProvider';
+import { setUpWorker } from '../mocks/browser';
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
