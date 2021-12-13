@@ -1,8 +1,10 @@
 import { rest } from 'msw';
 import { offersHandlers } from './offers';
+import { promotionsHandlers } from './promotions';
 
 export const handlers = [
   ...offersHandlers,
+  ...promotionsHandlers,
   rest.get('/success', (req, res, ctx) => {
     return res(
       ctx.status(200),
