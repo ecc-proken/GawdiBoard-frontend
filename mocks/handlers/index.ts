@@ -1,6 +1,8 @@
 import { rest } from 'msw';
+import { offersHandlers } from './offers';
 
 export const handlers = [
+  ...offersHandlers,
   rest.get('/success', (req, res, ctx) => {
     return res(
       ctx.status(200),
