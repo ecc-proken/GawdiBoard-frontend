@@ -1,6 +1,16 @@
 import { rest } from 'msw';
+import { authHandlers } from './auth';
+import { offersHandlers } from './offers';
+import { profileHandlers } from './profile';
+import { promotionsHandlers } from './promotions';
+import { worksHandlers } from './works';
 
 export const handlers = [
+  ...authHandlers,
+  ...offersHandlers,
+  ...profileHandlers,
+  ...promotionsHandlers,
+  ...worksHandlers,
   rest.get('/success', (req, res, ctx) => {
     return res(
       ctx.status(200),
