@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useState } from 'react';
 import type { Offer } from '../hooks/requests/offers';
 
@@ -28,7 +29,9 @@ export default function OfferOverview({ offer }: Props) {
           </div>
         </>
       ) : null}
-      <h2>{offer.title}</h2>
+      <h2>
+        <Link href={`/board/offers/${offer.id}`}>{offer.title}</Link>
+      </h2>
       <p>対象者: {offer.target || '詳細を見てください'}</p>
       <div className="tags">
         {offer.tags.map((tag) => (
