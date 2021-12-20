@@ -45,7 +45,8 @@ function HomePage() {
     <div>
       <h1>Gawdi Boardへようこそ</h1>
       <form onSubmit={onSubmit}>
-        <input {...register('keyword')}></input>
+        <label htmlFor="keyword">何か打ってね</label>
+        <input id="keyword" {...register('keyword')}></input>
         {errors.keyword && <span>{errors.keyword.message}</span>}
         <button>押す</button>
       </form>

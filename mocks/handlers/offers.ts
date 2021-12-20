@@ -1,4 +1,5 @@
 import { rest } from 'msw';
+import { getPaginationInfo } from '../utils';
 
 export const offersHandlers = [
   rest.get('/offer/list', (req, res, ctx) => {
@@ -6,6 +7,7 @@ export const offersHandlers = [
       ctx.status(200),
       ctx.json({
         offers,
+        ...getPaginationInfo(req.url),
       })
     );
   }),
@@ -14,6 +16,7 @@ export const offersHandlers = [
       ctx.status(200),
       ctx.json({
         offers,
+        ...getPaginationInfo(req.url),
       })
     );
   }),
