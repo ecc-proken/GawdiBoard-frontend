@@ -1,8 +1,7 @@
 import type { ReactElement } from 'react';
 import { Fragment } from 'react';
-import { useInfiniteQuery } from 'react-query';
 import Layout from '../../../components/layouts/Layout';
-import { jsonClient } from '../../../utils/httpClient';
+import { useInfiniteOffers } from '../../../hooks/requests/offers';
 
 function AllOffersPage() {
   const {
@@ -12,17 +11,7 @@ function AllOffersPage() {
     hasNextPage,
     isFetching,
     isFetchingNextPage,
-  } = useInfiniteQuery(
-    'offers',
-    ({ pageParam = 1 }) =>
-      jsonClient('/offer/list', { params: { page: pageParam } }),
-    {
-      getNextPageParam: (lastPage) => {
-        const nextPage = lastPage.meta.current_page + 1;
-        return lastPage.meta.last_page >= nextPage ? nextPage : false;
-      },
-    }
-  );
+  } = useInfiniteOffers();
 
   return (
     <div>
