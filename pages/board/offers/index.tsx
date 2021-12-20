@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react';
 import { Fragment } from 'react';
 import Layout from '../../../components/layouts/Layout';
+import OfferOverview from '../../../components/OfferOverview';
 import { useInfiniteOffers } from '../../../hooks/requests/offers';
 
 function AllOffersPage() {
@@ -18,40 +19,34 @@ function AllOffersPage() {
       <h1>募集一覧</h1>
       {error && <p role="alert">エラーが発生しました。詳細: error.message</p>}
       {data && (
-        <>
+        <div className="offers-container">
           {data.pages.map((pageData, i) => (
             <Fragment key={i}>
-              {pageData.offers.map((offer: any) => (
-                <div key={offer.id} className="offer">
-                  <h2>{offer.title}</h2>
-                  <p>掲載終了日: {offer.end_date}</p>
-                  <p>募集主: {offer.user_name}</p>
-                </div>
+              {pageData.offers.map((offer) => (
+                <OfferOverview key={offer.id} offer={offer} />
               ))}
             </Fragment>
           ))}
-          {hasNextPage && (
-            <div>
-              <button
-                onClick={() => fetchNextPage()}
-                disabled={!hasNextPage || isFetchingNextPage}
-              >
-                もっと見る
-              </button>
-            </div>
-          )}
-        </>
+        </div>
+      )}
+      {hasNextPage && (
+        <div>
+          <button
+            onClick={() => fetchNextPage()}
+            disabled={!hasNextPage || isFetchingNextPage}
+          >
+            もっと見る
+          </button>
+        </div>
       )}
       {isFetching && <p>ロード中...</p>}
       <style jsx>
         {`
-          .offer {
-            display: inline-block;
-            border: gray 2px solid;
-            border-radius: 10px;
-            width: 25%;
-            margin: 20px 10px;
-            padding: 10px;
+          .offers-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: start;
+            margin: 10px;
           }
         `}
       </style>
