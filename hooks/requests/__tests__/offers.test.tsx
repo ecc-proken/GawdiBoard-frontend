@@ -1,25 +1,12 @@
 import { renderHook } from '@testing-library/react-hooks';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { createWrapper } from '../../../contexts/testUtils';
 import { useInfiniteOffers } from '../offers';
-
-const fakeQueryClient = () =>
-  new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  });
 
 // パラメタがちゃんとつくかとかはフックを呼び出すコンポーネント側で十分にテストできると思うのでここには書かない。
 describe('useInfiniteOffers', () => {
   it('pageを渡さないと1から始まる', async () => {
     const { result, waitFor } = renderHook(() => useInfiniteOffers(), {
-      wrapper: ({ children }) => (
-        <QueryClientProvider client={fakeQueryClient()}>
-          {children}
-        </QueryClientProvider>
-      ),
+      wrapper: createWrapper(),
     });
 
     await waitFor(() => result.current.isSuccess);
@@ -31,13 +18,7 @@ describe('useInfiniteOffers', () => {
   it('pageを渡すとその数字から始まる', async () => {
     const { result, waitFor } = renderHook(
       () => useInfiniteOffers({ page: '2' }),
-      {
-        wrapper: ({ children }) => (
-          <QueryClientProvider client={fakeQueryClient()}>
-            {children}
-          </QueryClientProvider>
-        ),
-      }
+      { wrapper: createWrapper() }
     );
 
     await waitFor(() => result.current.isSuccess);
@@ -49,13 +30,7 @@ describe('useInfiniteOffers', () => {
   it('fetchNextPageでpageが1進む', async () => {
     const { result, waitFor } = renderHook(
       () => useInfiniteOffers({ page: '1' }),
-      {
-        wrapper: ({ children }) => (
-          <QueryClientProvider client={fakeQueryClient()}>
-            {children}
-          </QueryClientProvider>
-        ),
-      }
+      { wrapper: createWrapper() }
     );
 
     await waitFor(() => result.current.isSuccess);
@@ -70,13 +45,7 @@ describe('useInfiniteOffers', () => {
   it('最後のページになったらhasNextPageがfalseになる', async () => {
     const { result, waitFor } = renderHook(
       () => useInfiniteOffers({ page: '3' }),
-      {
-        wrapper: ({ children }) => (
-          <QueryClientProvider client={fakeQueryClient()}>
-            {children}
-          </QueryClientProvider>
-        ),
-      }
+      { wrapper: createWrapper() }
     );
 
     await waitFor(() => result.current.isSuccess);
