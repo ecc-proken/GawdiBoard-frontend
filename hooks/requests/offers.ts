@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from 'react-query';
+import { useInfiniteQuery, useQuery } from 'react-query';
 import { jsonClient } from '../../utils/httpClient';
 import type { Tag } from './tags';
 import type { PaginatedResponse } from './typeUtils';
@@ -23,8 +23,12 @@ type GetOffersRequest = {
   offer_tag_ids?: string[];
   page?: string;
 };
-
 type GetOffersResponse = PaginatedResponse<{ offers: Offer[] }>;
+
+type GetOfferRequest = string;
+type GetOfferResponse = {
+  offer: Offer;
+};
 
 function useInfiniteOffers(options?: GetOffersRequest) {
   return useInfiniteQuery<GetOffersResponse, Error>(
@@ -44,5 +48,18 @@ function useInfiniteOffers(options?: GetOffersRequest) {
   );
 }
 
+function useOffer(offer_id: GetOfferRequest, enabled = true) {
+  return useQuery<GetOfferResponse>(
+    ['offer', offer_id],
+    () =>
+      jsonClient('/offer/single', {
+        params: { offer_id },
+      }),
+    {
+      enabled,
+    }
+  );
+}
+
 export type { Offer };
-export { useInfiniteOffers };
+export { useInfiniteOffers, useOffer };
