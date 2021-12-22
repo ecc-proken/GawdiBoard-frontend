@@ -1,9 +1,37 @@
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import type { ReactElement } from 'react';
+import Modal from 'react-modal';
+import css from 'styled-jsx/css';
 import Layout from '../../../components/layouts/Layout';
 import { useOffer } from '../../../hooks/requests/offers';
 
+const { className: modalClassName, styles: modalStyles } = css.resolve`
+  .modal {
+    position: absolute;
+    top: 30%;
+    right: 30%;
+    bottom: 30%;
+    left: 30%;
+    /* min-width: 450px; */
+    padding: 20px;
+    border: 1px solid gray;
+    border-radius: 12px;
+    background-color: white;
+  }
+
+  @media (max-width: 768px) {
+    .modal {
+      top: 25%;
+      right: 20px;
+      bottom: 25%;
+      left: 20px;
+    }
+  }
+`;
+
 function OfferDetailPage() {
+  const [showModal, setShowModal] = useState(false);
   const router = useRouter();
 
   const { data, error, isLoading } = useOffer(
@@ -51,13 +79,22 @@ function OfferDetailPage() {
           </p>
           <p>投稿日: {offer.post_date}</p>
           <p>掲載終了日: {offer.end_date}</p>
-          <button
-            onClick={() => {
-              alert('興味がある');
-            }}
+          <button onClick={() => setShowModal(true)}>興味がある</button>
+          <Modal
+            className={`modal ${modalClassName}`}
+            isOpen={showModal}
+            onRequestClose={() => setShowModal(false)}
           >
-            興味がある
-          </button>
+            <div className="modal-header">
+              <button onClick={() => setShowModal(false)}>X</button>
+            </div>
+            <button>ぜひ参加したい</button>
+            <br />
+            <button>内容によっては参加したい</button>
+            <br />
+            <button>とりあえず話してみたい</button>
+            <br />
+          </Modal>
         </div>
       )}
       <style jsx>
@@ -69,11 +106,19 @@ function OfferDetailPage() {
           .offerer {
             margin-bottom: 8px;
           }
+          .modal-header {
+            display: flex;
+            flex-direction: row-reverse;
+          }
+          button {
+            margin-bottom: 8px;
+          }
           p {
             margin-bottom: 8px;
           }
         `}
       </style>
+      {modalStyles}
     </div>
   );
 }

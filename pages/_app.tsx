@@ -1,6 +1,7 @@
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import type { ReactElement, ReactNode } from 'react';
+import Modal from 'react-modal';
 import { AppProvider } from '../contexts/AppProvider';
 import { setUpWorker } from '../mocks/browser';
 
@@ -20,6 +21,8 @@ if (process.env.NODE_ENV === 'development') {
     setUpWorker().start({ onUnhandledRequest: 'bypass' });
   }
 }
+
+Modal.setAppElement('#__next');
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
