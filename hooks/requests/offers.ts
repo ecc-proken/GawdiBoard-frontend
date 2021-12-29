@@ -25,7 +25,7 @@ type GetOffersRequest = {
 };
 type GetOffersResponse = PaginatedResponse<{ offers: Offer[] }>;
 
-type GetOfferRequest = string;
+type GetOfferRequest = { offer_id: number };
 type GetOfferResponse = {
   offer: Offer;
 };
@@ -47,7 +47,7 @@ function useInfiniteOffers(options?: GetOffersRequest) {
       },
       onSuccess: (data) => {
         data.pages[data.pages.length - 1].offers.forEach((offer) => {
-          queryClient.setQueryData(['offer', '' + offer.id], { offer });
+          queryClient.setQueryData(['offer', offer.id], { offer });
         });
         // 募集の一件取得APIを叩いたときに再利用できるようにそれぞれキャッシュする
         // offer_tag_idsなどのパラメタがあるのでgetQueryDataではどのクエリキャッシュから取ればいいかわからない
@@ -60,12 +60,12 @@ function useInfiniteOffers(options?: GetOffersRequest) {
   );
 }
 
-function useOffer(offer_id: GetOfferRequest, enabled = true) {
+function useOffer({ offer_id }: GetOfferRequest, enabled = true) {
   return useQuery<GetOfferResponse>(
     ['offer', offer_id],
     () =>
       jsonClient('/offer/single', {
-        params: { offer_id },
+        params: { offer_id: offer_id.toString() },
       }),
     {
       enabled,

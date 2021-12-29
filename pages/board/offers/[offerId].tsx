@@ -35,9 +35,12 @@ function OfferDetailPage() {
   const router = useRouter();
 
   const { data, error, isLoading } = useOffer(
-    // 実際にはstring[]は入らないのでstringに変換する
-    '' + router.query.offerId,
-    // 初期ロードでrouter.queryが空オブジェクトになるのでリクエストをスキップ
+    // 初期ロード時にrouter.queryが空オブジェクトになる
+    // 参考: https://nextjs.org/docs/routing/dynamic-routes#caveats
+    // offer_idがundefinedの内はリクエストを送らないのでそのまま通す。
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    { offer_id: +router.query.offerId! },
+    // offer_idが取れるまでリクエストを遅らせる
     router.isReady
   );
 
