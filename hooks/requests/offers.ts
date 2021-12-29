@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useQuery } from 'react-query';
+import { useQueryClient, useInfiniteQuery, useQuery } from 'react-query';
 import { jsonClient } from '../../utils/httpClient';
 import type { Tag } from './tags';
 import type { PaginatedResponse } from './typeUtils';
@@ -31,6 +31,7 @@ type GetOfferResponse = {
 };
 
 function useInfiniteOffers(options?: GetOffersRequest) {
+  const queryClient = useQueryClient();
   return useInfiniteQuery<GetOffersResponse, Error>(
     'offers',
     ({ pageParam }) => {
@@ -43,6 +44,17 @@ function useInfiniteOffers(options?: GetOffersRequest) {
       getNextPageParam: (lastPage) => {
         const nextPage = lastPage.meta.current_page + 1;
         return lastPage.meta.last_page >= nextPage ? nextPage : false;
+      },
+      onSuccess: (data) => {
+        data.pages[data.pages.length - 1].offers.forEach((offer) => {
+          queryClient.setQueryData(['offer', '' + offer.id], { offer });
+        });
+        // 募集の一件取得APIを叩いたときに再利用できるようにそれぞれキャッシュする
+        // offer_tag_idsなどのパラメタがあるのでgetQueryDataではどのクエリキャッシュから取ればいいかわからない
+        // この方法だとキーが個々のofferのcacheTimeはデフォルトで固定になるっぽいのと
+        // その他のクエリのオプションも設定できないけど、今のところ困らなさそうなのでこの方法を採用してる
+        // https://react-query.tanstack.com/reference/QueryClient#queryclientsetquerydata
+        // 問題が出てきたらキャッシュを諦めるか、直近の募集一覧APIコールのパラメタをどこかに覚えさせて対応してください
       },
     }
   );
