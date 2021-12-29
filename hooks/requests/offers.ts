@@ -20,7 +20,7 @@ type Offer = {
 };
 
 type GetOffersRequest = {
-  offer_tag_ids?: string[];
+  offer_tag_ids?: number[];
   page?: string;
 };
 type GetOffersResponse = PaginatedResponse<{ offers: Offer[] }>;
@@ -30,12 +30,12 @@ type GetOfferResponse = {
   offer: Offer;
 };
 
-function useInfiniteOffers(options?: GetOffersRequest) {
+function useInfiniteOffers(options: GetOffersRequest = {}) {
   const queryClient = useQueryClient();
   return useInfiniteQuery<GetOffersResponse, Error>(
     'offers',
     ({ pageParam }) => {
-      pageParam || (pageParam = options?.page || 1);
+      pageParam || (pageParam = options.page || 1);
       return jsonClient('/offer/list', {
         params: { ...options, page: pageParam },
       });
