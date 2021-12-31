@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from 'react-query';
+import { useInfiniteQuery, useMutation } from 'react-query';
 import { jsonClient } from '../../utils/httpClient';
 import type { Tag } from './tags';
 import type { PaginatedResponse } from './typeUtils';
@@ -26,6 +26,21 @@ type GetOffersRequest = {
 
 type GetOffersResponse = PaginatedResponse<{ offers: Offer[] }>;
 
+type AddOfferRequest = {
+  title: string;
+  target: string;
+  job: string;
+  note?: string;
+  picture?: string;
+  link?: string;
+  end_date: string;
+  user_class: string;
+  offer_tag_ids?: number[];
+};
+type AddOfferResponse = {
+  offer: Offer;
+};
+
 function useInfiniteOffers(options?: GetOffersRequest) {
   return useInfiniteQuery<GetOffersResponse, Error>(
     'offers',
@@ -44,5 +59,21 @@ function useInfiniteOffers(options?: GetOffersRequest) {
   );
 }
 
+function useAddOffer() {
+  return useMutation<AddOfferResponse, Error, AddOfferRequest>(
+    (newOffer) => {
+      return jsonClient('/mock/offer/post', {
+        method: 'POST',
+        body: { ...newOffer },
+      });
+    },
+    {
+      onSuccess: () => {
+        alert('successfully posted offer!');
+      },
+    }
+  );
+}
+
 export type { Offer };
-export { useInfiniteOffers };
+export { useAddOffer, useInfiniteOffers };
