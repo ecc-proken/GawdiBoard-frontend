@@ -12,10 +12,12 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^2.8.4",
+    "@types/react-modal": "^3.13.1",
     "next": "^12.0.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.20.5",
+    "react-modal": "^3.14.4",
     "react-query": "3.33.7",
     "yup": "^0.32.11"
   },

@@ -51,4 +51,21 @@ describe('jsonClient', () => {
       jsonClient('/success', { body: { a: 1 }, method: 'POST' })
     ).resolves.toHaveProperty('contentType', 'application/json');
   });
+
+  it('クエリパラメタはnumber型でも動く', async () => {
+    server.use(
+      rest.get('/success', async (req, res, ctx) => {
+        const queryParameter = req.url.searchParams.toString();
+        return res(ctx.status(200), ctx.json({ queryParameter }));
+      })
+    );
+
+    await expect(
+      jsonClient('/success', { params: { a: 1 } })
+    ).resolves.toHaveProperty('queryParameter', 'a=1');
+
+    await expect(
+      jsonClient('/success', { params: { a: [1, 2, 3] } })
+    ).resolves.toHaveProperty('queryParameter', encodeURI('a[]=1&a[]=2&a[]=3'));
+  });
 });
