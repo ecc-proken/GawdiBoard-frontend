@@ -1,11 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import { useRouter } from 'next/router';
+import { Fragment } from 'react';
 import type { ReactElement } from 'react';
 import { useForm } from 'react-hook-form';
 import type { NestedValue, Resolver } from 'react-hook-form';
 import * as yup from 'yup';
 import Layout from '../../components/layouts/Layout';
 import { useAddOffer } from '../../hooks/requests/offers';
+import { useTags } from '../../hooks/requests/tags';
 
 type FormValue = {
   title: string;
@@ -39,13 +41,19 @@ const schema = yup.object({
 });
 
 function PostOfferPage() {
-  const { mutate, error, isLoading } = useAddOffer();
+  const { data: tags } = useTags({ tag_genre_id: '1' });
+
+  const {
+    mutate: addOffer,
+    error: addOfferError,
+    isLoading: isAddingOffer,
+  } = useAddOffer();
 
   const { register, handleSubmit, formState } = useForm<FormValue>({
     resolver: yupResolver(schema) as Resolver<FormValue>,
   });
   const onSubmit = handleSubmit((newOfferAttributes) => {
-    mutate(newOfferAttributes);
+    addOffer(newOfferAttributes);
   });
   const formErrors = formState.errors;
 
@@ -64,29 +72,19 @@ function PostOfferPage() {
         <div className="tags">
           タグ
           <br />
-          <label htmlFor="tag1">フロントエンジニア募集</label>
-          <input
-            id="tag1"
-            type="checkbox"
-            value={1}
-            {...register('offer_tag_ids.1')}
-          />
-          <br />
-          <label htmlFor="tag2">バックエンドエンジニア募集</label>
-          <input
-            id="tag2"
-            type="checkbox"
-            value={2}
-            {...register('offer_tag_ids.2')}
-          />
-          <br />
-          <label htmlFor="tag3">デザインナー募集</label>
-          <input
-            id="tag3"
-            type="checkbox"
-            value={3}
-            {...register('offer_tag_ids.3')}
-          />
+          {tags &&
+            tags.tags.map((tag, i) => (
+              <Fragment key={tag.id}>
+                <label htmlFor={`tag${i}`}>{tag.name}</label>
+                <input
+                  id={`tag${i}`}
+                  type="checkbox"
+                  value={tag.id}
+                  {...register(`offer_tag_ids.${i}`)}
+                />
+                <br />
+              </Fragment>
+            ))}
           {formErrors.offer_tag_ids && (
             <span>{formErrors.offer_tag_ids.message}</span>
           )}
@@ -123,7 +121,7 @@ function PostOfferPage() {
           <input id="link" type="text" {...register('link')} />
           {formErrors.link && <span>{formErrors.link.message}</span>}
         </div>
-        <button disabled={isLoading}>投稿</button>
+        <button disabled={isAddingOffer}>投稿</button>
         <button
           type="button"
           onClick={() => {
@@ -131,13 +129,13 @@ function PostOfferPage() {
               router.push('/board/offers/');
             }
           }}
-          disabled={isLoading}
+          disabled={isAddingOffer}
         >
           キャンセル
         </button>
-        {error && (
+        {addOfferError && (
           <p role="alert">
-            投稿中にエラーが発生しました。詳細: {error.message}
+            投稿中にエラーが発生しました。詳細: {addOfferError.message}
           </p>
         )}
       </form>
