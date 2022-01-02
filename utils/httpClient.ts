@@ -1,13 +1,13 @@
-function buildURLSeachParams(params: Record<string, string | string[]>) {
+function buildURLSeachParams(params: Record<string, any>) {
   // クエリパラメタが配列の時だけ処理を分ける
   const stringParams: Record<string, string> = {};
   const arrayParams: Record<string, string[]> = {};
 
   Object.keys(params).forEach((key) => {
     if (Array.isArray(params[key])) {
-      arrayParams[key] = params[key] as string[];
+      arrayParams[key] = params[key].map((param: any) => param.toString());
     } else {
-      stringParams[key] = params[key] as string;
+      stringParams[key] = params[key].toString();
     }
   });
 
@@ -24,8 +24,8 @@ function buildURLSeachParams(params: Record<string, string | string[]>) {
 }
 
 type jsonClientData = {
-  // クエリパラメタ (stringのみ https://github.com/microsoft/TypeScript/issues/32951)
-  params?: Record<string, string | string[]>;
+  // クエリパラメタ (string以外も受け付けてtoStringする)
+  params?: Record<string, any>;
   //リクエストボディ
   body?: any;
   method?: string;
