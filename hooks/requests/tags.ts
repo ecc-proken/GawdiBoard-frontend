@@ -11,7 +11,7 @@ type Tag = {
 };
 
 type GetTagsRequest = {
-  tag_genre_id: string;
+  tag_genre_id: number;
 };
 type GetTagsResponse = {
   tags: Tag[];

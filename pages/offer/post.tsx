@@ -51,7 +51,7 @@ const schema = yup.object({
 });
 
 function PostOfferPage() {
-  const { data: tags } = useTags({ tag_genre_id: '1' });
+  const { data: tags } = useTags({ tag_genre_id: 1 });
 
   const {
     mutate: addOffer,
