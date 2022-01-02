@@ -28,11 +28,21 @@ const schema = yup.object({
   note: yup.string(),
   picture: yup.string(), //TODO: stringじゃない気がする
   link: yup.string().url('リンクは有効なURLでなければいけません'),
-  end_date: yup
-    .date()
-    .required('掲載終了日は選択が必須です')
-    .nullable()
-    .transform((current, original) => (original === '' ? null : current)),
+  // 投稿内容の入力中に日付を跨いだ場合を考慮してバリデーションのたびに現在日付を取得する
+  end_date: yup.lazy(() => {
+    const today = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
+    const dayInMs = 1000 * 60 * 60 * 24;
+    const min = new Date(today + dayInMs * 1);
+    const max = new Date(today + dayInMs * 90);
+
+    return yup
+      .date()
+      .required('掲載終了日は選択が必須です')
+      .min(min, '掲載終了日は明日以降でなければいけません')
+      .max(max, '掲載終了日は今から90日以内でなければいけません')
+      .nullable()
+      .transform((current, original) => (original === '' ? null : current));
+  }),
   user_class: yup.string().required('募集主のクラスは入力が必須です'),
   offer_tag_ids: yup
     .array(yup.number())
