@@ -1,9 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import { useRouter } from 'next/router';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import type { ReactElement } from 'react';
 import { useForm } from 'react-hook-form';
 import type { NestedValue, Resolver } from 'react-hook-form';
+import Modal from 'react-modal';
 import * as yup from 'yup';
 import Layout from '../../components/layouts/Layout';
 import { useAddOffer } from '../../hooks/requests/offers';
@@ -59,8 +60,9 @@ function PostOfferPage() {
     isLoading: isAddingOffer,
   } = useAddOffer();
 
-  const { register, handleSubmit, formState } = useForm<FormValue>({
+  const { register, handleSubmit, formState, watch } = useForm<FormValue>({
     resolver: yupResolver(schema) as Resolver<FormValue>,
+    defaultValues: { offer_tag_ids: [] },
   });
   const onSubmit = handleSubmit((newOfferAttributes) => {
     addOffer(newOfferAttributes);
@@ -68,6 +70,12 @@ function PostOfferPage() {
   const formErrors = formState.errors;
 
   const router = useRouter();
+
+  const [showTagSelector, setShowTagSelector] = useState(false);
+
+  const selectedTags = watch('offer_tag_ids')
+    .filter(Boolean)
+    .map((id) => +id);
 
   return (
     <div>
@@ -81,20 +89,37 @@ function PostOfferPage() {
         </div>
         <div className="tags">
           タグ
-          <br />
-          {tags &&
-            tags.tags.map((tag, i) => (
-              <Fragment key={tag.id}>
-                <label htmlFor={`tag${i}`}>{tag.name}</label>
-                <input
-                  id={`tag${i}`}
-                  type="checkbox"
-                  value={tag.id}
-                  {...register(`offer_tag_ids.${i}`)}
-                />
-                <br />
-              </Fragment>
-            ))}
+          <Modal
+            isOpen={showTagSelector}
+            onRequestClose={() => setShowTagSelector(false)}
+          >
+            <button onClick={() => setShowTagSelector(false)}>x</button>
+            {tags &&
+              tags.tags.map((tag, i) => (
+                <Fragment key={tag.id}>
+                  <label htmlFor={`tag${i}`}>{tag.name}</label>
+                  <input
+                    id={`tag${i}`}
+                    type="checkbox"
+                    value={tag.id}
+                    {...register(`offer_tag_ids.${i}`)}
+                  />
+                  <br />
+                </Fragment>
+              ))}
+          </Modal>
+          <button onClick={() => setShowTagSelector(true)}>タグ一覧</button>
+          {tags && (
+            <div>
+              {tags.tags
+                .filter(({ id }) => selectedTags.includes(id))
+                .map((tag) => (
+                  <span key={tag.id} className="tag">
+                    #{tag.name}
+                  </span>
+                ))}
+            </div>
+          )}
           {formErrors.offer_tag_ids && (
             <span>{formErrors.offer_tag_ids.message}</span>
           )}
@@ -157,6 +182,12 @@ function PostOfferPage() {
           label {
             vertical-align: top;
             margin-right: 8px;
+          }
+          .tag {
+            margin: 4px;
+            padding: 4px;
+            background-color: lightgray;
+            white-space: nowrap;
           }
         `}
       </style>
