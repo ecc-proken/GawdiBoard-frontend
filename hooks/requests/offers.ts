@@ -94,6 +94,7 @@ function useOffer({ offer_id }: GetOfferRequest, enabled = true) {
 }
 
 function useAddOffer() {
+  const queryClient = useQueryClient();
   return useMutation<AddOfferResponse, Error, AddOfferRequest>(
     (newOffer) => {
       return jsonClient('/mock/offer/post', {
@@ -103,6 +104,7 @@ function useAddOffer() {
     },
     {
       onSuccess: () => {
+        queryClient.invalidateQueries('offers');
         alert('successfully posted offer!');
       },
     }
