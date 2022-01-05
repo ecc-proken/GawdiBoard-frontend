@@ -50,6 +50,13 @@ type AddOfferResponse = {
   offer: Offer;
 };
 
+type EditOfferRequest = {
+  offer_id: number;
+} & Partial<AddOfferRequest>;
+type EditOfferResponse = {
+  offer: Offer;
+};
+
 function useInfiniteOffers(options: GetOffersRequest = {}) {
   const queryClient = useQueryClient();
   return useInfiniteQuery<GetOffersResponse, Error>(
@@ -111,5 +118,24 @@ function useAddOffer() {
   );
 }
 
+function useEditOffer() {
+  const queryClient = useQueryClient();
+  return useMutation<EditOfferResponse, Error, EditOfferRequest>(
+    (newOffer) => {
+      return jsonClient('/mock/offer/edit', {
+        method: 'POST',
+        body: { ...newOffer },
+      });
+    },
+    {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries('offers');
+        queryClient.setQueryData(['offer', data.offer.id], data);
+        alert('successfully edited offer!');
+      },
+    }
+  );
+}
+
 export type { Offer };
-export { useAddOffer, useInfiniteOffers, useOffer };
+export { useAddOffer, useEditOffer, useInfiniteOffers, useOffer };
