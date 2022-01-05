@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { ReactElement } from 'react';
 import { Fragment } from 'react';
 import Layout from '../../../components/layouts/Layout';
@@ -17,6 +18,9 @@ function AllOffersPage() {
   return (
     <div>
       <h1>募集一覧</h1>
+      <div>
+        <Link href="/offer/post">投稿する</Link>
+      </div>
       {error && <p role="alert">エラーが発生しました。詳細: error.message</p>}
       {data && (
         <div className="offers-container">
