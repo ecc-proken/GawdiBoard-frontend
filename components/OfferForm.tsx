@@ -124,7 +124,9 @@ function OfferForm({
               </Fragment>
             ))}
         </Modal>
-        <button onClick={() => setShowTagSelector(true)}>タグ一覧</button>
+        <button type="button" onClick={() => setShowTagSelector(true)}>
+          タグ一覧
+        </button>
         {tags && (
           <div>
             {tags.tags
