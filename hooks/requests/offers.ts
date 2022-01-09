@@ -1,4 +1,9 @@
-import { useQueryClient, useInfiniteQuery, useQuery } from 'react-query';
+import {
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
+  useMutation,
+} from 'react-query';
 import { jsonClient } from '../../utils/httpClient';
 import type { Tag } from './tags';
 import type { PaginatedResponse } from './typeUtils';
@@ -27,6 +32,28 @@ type GetOffersResponse = PaginatedResponse<{ offers: Offer[] }>;
 
 type GetOfferRequest = { offer_id: number };
 type GetOfferResponse = {
+  offer: Offer;
+};
+
+type AddOfferRequest = {
+  title: string;
+  target: string;
+  job: string;
+  note?: string;
+  picture?: string;
+  link?: string;
+  end_date: string;
+  user_class: string;
+  offer_tag_ids?: number[];
+};
+type AddOfferResponse = {
+  offer: Offer;
+};
+
+type EditOfferRequest = {
+  offer_id: number;
+} & Partial<AddOfferRequest>;
+type EditOfferResponse = {
   offer: Offer;
 };
 
@@ -73,5 +100,42 @@ function useOffer({ offer_id }: GetOfferRequest, enabled = true) {
   );
 }
 
+function useAddOffer() {
+  const queryClient = useQueryClient();
+  return useMutation<AddOfferResponse, Error, AddOfferRequest>(
+    (newOffer) => {
+      return jsonClient('/mock/offer/post', {
+        method: 'POST',
+        body: { ...newOffer },
+      });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('offers');
+        alert('successfully posted offer!');
+      },
+    }
+  );
+}
+
+function useEditOffer() {
+  const queryClient = useQueryClient();
+  return useMutation<EditOfferResponse, Error, EditOfferRequest>(
+    (newOffer) => {
+      return jsonClient('/mock/offer/edit', {
+        method: 'POST',
+        body: { ...newOffer },
+      });
+    },
+    {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries('offers');
+        queryClient.setQueryData(['offer', data.offer.id], data);
+        alert('successfully edited offer!');
+      },
+    }
+  );
+}
+
 export type { Offer };
-export { useInfiniteOffers, useOffer };
+export { useAddOffer, useEditOffer, useInfiniteOffers, useOffer };

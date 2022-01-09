@@ -28,7 +28,7 @@ export const offersHandlers = [
       })
     );
   }),
-  rest.post('offer/post', (req, res, ctx) => {
+  rest.post('/mock/offer/post', (req, res, ctx) => {
     return res(
       ctx.status(201),
       ctx.json({
@@ -39,7 +39,7 @@ export const offersHandlers = [
   rest.post('offer/delete', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json({}));
   }),
-  rest.post('offer/edit', (req, res, ctx) => {
+  rest.post('/mock/offer/edit', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
