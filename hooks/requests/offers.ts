@@ -57,6 +57,11 @@ type EditOfferResponse = {
   offer: Offer;
 };
 
+type GetUserOffersRequest = { student_number: string };
+type GetUserOffersResponse = {
+  offers: Offer[];
+};
+
 function useInfiniteOffers(options: GetOffersRequest = {}) {
   const queryClient = useQueryClient();
   return useInfiniteQuery<GetOffersResponse, Error>(
@@ -137,5 +142,35 @@ function useEditOffer() {
   );
 }
 
+function useUserOffers(
+  { student_number }: GetUserOffersRequest,
+  enabled = true
+) {
+  const queryClient = useQueryClient();
+  return useQuery<GetUserOffersResponse>(
+    ['offers', 'user', student_number],
+    () =>
+      jsonClient('/user/offer-list', {
+        params: {
+          student_number,
+        },
+      }),
+    {
+      enabled,
+      onSuccess: (data) => {
+        data.offers.forEach((offer) => {
+          queryClient.setQueryData(['offer', offer.id], { offer });
+        });
+      },
+    }
+  );
+}
+
 export type { Offer };
-export { useAddOffer, useEditOffer, useInfiniteOffers, useOffer };
+export {
+  useAddOffer,
+  useEditOffer,
+  useInfiniteOffers,
+  useOffer,
+  useUserOffers,
+};
