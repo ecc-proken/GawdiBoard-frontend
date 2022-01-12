@@ -2,22 +2,16 @@ import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
 import Layout from '../../components/layouts/Layout';
 import OfferOverview from '../../components/OfferOverview';
-import { useUserOffers } from '../../hooks/requests/offers';
+import UserOfferProvider from '../../components/UserOfferProvider';
 import { user } from '../../mocks/handlers/auth';
 
 function UserProfilePage() {
   const router = useRouter();
   const userId = router.query.userId as string;
 
-  const { data, isLoading } = useUserOffers(
-    { student_number: userId },
-    router.isReady
-  );
-
   return (
     <div>
       <h1>ユーザー詳細</h1>
-      {isLoading && <p>データをロード中</p>}
       <div className="user-info">
         <p>学籍番号: {user.student_number}</p>
         <p>名前: {user.user_name}</p>
@@ -33,13 +27,17 @@ function UserProfilePage() {
         <li role="button">投稿した宣伝</li>
         <li role="button">投稿した作品</li>
       </ul>
-      {data && (
-        <div>
-          {data.offers.map((offer) => (
-            <OfferOverview key={offer.id} offer={offer}></OfferOverview>
-          ))}
-        </div>
-      )}
+      <div className="post-list">
+        <UserOfferProvider studentNumber={userId}>
+          {({ data }) =>
+            data
+              ? data.offers.map((offer) => (
+                  <OfferOverview key={offer.id} offer={offer}></OfferOverview>
+                ))
+              : 'ロード中'
+          }
+        </UserOfferProvider>
+      </div>
       <style jsx>
         {`
           .tab {
