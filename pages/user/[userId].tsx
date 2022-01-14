@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
 import { resetIdCounter, Tab, Tabs, TabList, TabPanel } from 'react-tabs';
@@ -58,6 +59,9 @@ function UserProfilePage() {
   const router = useRouter();
   const userId = router.query.userId as string;
 
+  // TODO: userログインユーザーと取得したユーザー情報を比較する
+  const isLoginUser = userId === user.student_number.toString();
+
   return (
     <div>
       <h1>ユーザー詳細</h1>
@@ -68,6 +72,16 @@ function UserProfilePage() {
         <p>
           Webサイト: <a href={user.link}>{user.link}</a>
         </p>
+        {isLoginUser && (
+          <div>
+            <Link href="/user/edit/profile">
+              <a className="edit-link">プロフィールを編集</a>
+            </Link>
+            <Link href="/user/edit/email">
+              <a className="edit-link">登録メールアドレスを編集</a>
+            </Link>
+          </div>
+        )}
       </div>
       <h2>{user.user_name}さんの投稿</h2>
       <Tabs selectedTabClassName="selected-tab">
@@ -81,7 +95,11 @@ function UserProfilePage() {
             {({ data }) =>
               data
                 ? data.offers.map((offer) => (
-                    <OfferOverview key={offer.id} offer={offer}></OfferOverview>
+                    <OfferOverview
+                      key={offer.id}
+                      offer={offer}
+                      editable={isLoginUser}
+                    ></OfferOverview>
                   ))
                 : 'ロード中'
             }
@@ -108,6 +126,21 @@ function UserProfilePage() {
             line-height: 1.8;
             text-decoration: underline;
             margin: 8px 12px;
+          }
+          .edit-link {
+            display: inline-block;
+            margin: 4px 8px;
+            padding: 4px 8px;
+            border: 1px solid tomato;
+            border-radius: 4px;
+            text-decoration: none;
+            color: white;
+            background-color: tomato;
+          }
+          .edit-link:hover {
+            background-color: red;
+            color: white;
+            border-color: red;
           }
         `}
       </style>
