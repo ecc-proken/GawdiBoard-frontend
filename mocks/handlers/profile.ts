@@ -10,7 +10,7 @@ export const profileHandlers = [
       })
     );
   }),
-  rest.get('/user/edit', (req, res, ctx) => {
+  rest.post('/mock/user/edit', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({

@@ -1,7 +1,8 @@
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
 import Layout from '../../../components/layouts/Layout';
 import { useProfileForm } from '../../../hooks/forms/useProfileForm';
+import { useEditUser } from '../../../hooks/requests/profile';
 import { user } from '../../../mocks/handlers/auth';
 
 function EditProfilePage() {
@@ -11,13 +12,21 @@ function EditProfilePage() {
     formState: { errors },
   } = useProfileForm(user);
 
+  const { mutate, error, isLoading } = useEditUser();
+
+  const router = useRouter();
+
   const onSubmit = handleSubmit((data) => {
-    console.log('submitting with', data);
+    mutate(data, {
+      onSuccess: () => {
+        router.push(`/user/${user.student_number}`);
+      },
+    });
   });
 
   const handleCancel = () => {
     if (confirm('入力内容を破棄しますか?')) {
-      Router.push(`/user/${user.student_number}`);
+      router.push(`/user/${user.student_number}`);
     }
   };
 
@@ -25,7 +34,7 @@ function EditProfilePage() {
     <div>
       <h1>ユーザー情報変更</h1>
       {user && (
-        <div>
+        <>
           <form onSubmit={onSubmit}>
             <div>
               <label htmlFor="user-name">ユーザーネーム</label>
@@ -47,12 +56,17 @@ function EditProfilePage() {
                 <span>{errors.self_introduction.message}</span>
               )}
             </div>
-            <button>変更</button>
-            <button type="button" onClick={handleCancel}>
+            <button disabled={isLoading}>変更</button>
+            <button type="button" onClick={handleCancel} disabled={isLoading}>
               キャンセル
             </button>
           </form>
-        </div>
+          {error && (
+            <p role="alert">
+              編集中にエラーが発生しました。詳細: {error.message}
+            </p>
+          )}
+        </>
       )}
     </div>
   );
