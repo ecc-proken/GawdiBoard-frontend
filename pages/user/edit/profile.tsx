@@ -68,6 +68,17 @@ function EditProfilePage() {
           )}
         </>
       )}
+      <style jsx>{`
+        form {
+          margin: 8px;
+        }
+        div {
+          margin-bottom: 16px;
+        }
+        label {
+          margin-right: 8px;
+        }
+      `}</style>
     </div>
   );
 }
