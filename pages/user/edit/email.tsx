@@ -4,6 +4,7 @@ import type { ReactElement } from 'react';
 import Modal from 'react-modal';
 import Layout from '../../../components/layouts/Layout';
 import { useEmailForm } from '../../../hooks/forms/useEmailForm';
+import { useEditEmail } from '../../../hooks/requests/profile';
 import { user } from '../../../mocks/handlers/auth';
 
 function EditEmailPage() {
@@ -15,10 +16,16 @@ function EditEmailPage() {
     getValues,
   } = useEmailForm();
 
+  const { mutate, error, isLoading } = useEditEmail();
+
   const router = useRouter();
 
-  const onSubmit = handleSubmit(() => {
-    setShowModal(true);
+  const onSubmit = handleSubmit((data) => {
+    mutate(data, {
+      onSuccess: () => {
+        setShowModal(true);
+      },
+    });
   });
   const handleCancel = () => {
     if (confirm('入力内容を破棄しますか?')) {
@@ -41,11 +48,16 @@ function EditEmailPage() {
               <input id="email" type="text" {...register('email')} />
               {errors.email && <span role="alert">{errors.email.message}</span>}
             </div>
-            <button>変更</button>
-            <button type="button" onClick={handleCancel}>
+            <button disabled={isLoading}>変更</button>
+            <button type="button" onClick={handleCancel} disabled={isLoading}>
               キャンセル
             </button>
           </form>
+          {error && (
+            <p role="alert">
+              編集中にエラーが発生しました。詳細: {error.message}
+            </p>
+          )}
         </>
       )}
       <Modal isOpen={showModal}>

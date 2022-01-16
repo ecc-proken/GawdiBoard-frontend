@@ -18,6 +18,13 @@ type EditUserResponse = {
   user: User;
 };
 
+type EditEmailRequest = {
+  email: string;
+};
+type EditEmailResponse = {
+  user: User;
+};
+
 function useEditUser() {
   return useMutation<EditUserResponse, Error, EditUserRequest>(
     (newUser) => {
@@ -33,5 +40,21 @@ function useEditUser() {
     }
   );
 }
+
+function useEditEmail() {
+  return useMutation<EditEmailResponse, Error, EditEmailRequest>(
+    (newEmail) => {
+      return jsonClient('/mock/user/edit-email', {
+        method: 'POST',
+        body: { ...newEmail },
+      });
+    },
+    {
+      onSuccess: () => {
+        // TODO ログインユーザーのemailをアップデートする
+      },
+    }
+  );
+}
 export type { User };
-export { useEditUser };
+export { useEditUser, useEditEmail };
