@@ -1,4 +1,5 @@
 import type { ReactElement } from 'react';
+import Header from '../../../components/layouts/Header';
 import Layout from '../../../components/layouts/Layout';
 
 function AllPromotionsPage() {
@@ -10,7 +11,12 @@ function AllPromotionsPage() {
 }
 
 AllPromotionsPage.getLayout = (page: ReactElement) => {
-  return <Layout title="宣伝を探す">{page}</Layout>;
+  return (
+    <>
+      <Header />
+      <Layout title="宣伝を探す">{page}</Layout>
+    </>
+  );
 };
 
 export default AllPromotionsPage;

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { ReactElement } from 'react';
 import { Fragment } from 'react';
+import Header from '../../../components/layouts/Header';
 import Layout from '../../../components/layouts/Layout';
 import OfferOverview from '../../../components/OfferOverview';
 import { useInfiniteOffers } from '../../../hooks/requests/offers';
@@ -17,7 +18,6 @@ function AllOffersPage() {
 
   return (
     <div>
-      <Link href="/user/2180372">マイページ</Link>
       <h1>募集一覧</h1>
       <div>
         <Link href="/offer/post">投稿する</Link>
@@ -60,7 +60,12 @@ function AllOffersPage() {
 }
 
 AllOffersPage.getLayout = (page: ReactElement) => {
-  return <Layout title="募集を探す">{page}</Layout>;
+  return (
+    <>
+      <Header />
+      <Layout title="募集を探す">{page}</Layout>
+    </>
+  );
 };
 
 export default AllOffersPage;

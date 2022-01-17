@@ -3,6 +3,7 @@ import { useState } from 'react';
 import type { ReactElement } from 'react';
 import Modal from 'react-modal';
 import css from 'styled-jsx/css';
+import Header from '../../../components/layouts/Header';
 import Layout from '../../../components/layouts/Layout';
 import { useOffer } from '../../../hooks/requests/offers';
 
@@ -127,7 +128,12 @@ function OfferDetailPage() {
 }
 
 OfferDetailPage.getLayout = (page: ReactElement) => {
-  return <Layout title="募集の詳細">{page}</Layout>;
+  return (
+    <>
+      <Header />
+      <Layout title="募集の詳細">{page}</Layout>
+    </>
+  );
 };
 
 export default OfferDetailPage;
