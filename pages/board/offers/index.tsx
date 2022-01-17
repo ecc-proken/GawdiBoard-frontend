@@ -17,6 +17,7 @@ function AllOffersPage() {
 
   return (
     <div>
+      <Link href="/user/2180372">マイページ</Link>
       <h1>募集一覧</h1>
       <div>
         <Link href="/offer/post">投稿する</Link>

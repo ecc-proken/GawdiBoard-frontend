@@ -1,34 +1,46 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import type { Offer } from '../hooks/requests/offers';
 
 type Props = {
   offer: Offer;
+  editable?: boolean;
 };
 
-export default function OfferOverview({ offer }: Props) {
+export default function OfferOverview({ offer, editable = false }: Props) {
   const [showMenu, setShowMenu] = useState(false);
   const daysBeforeExpiration = getDaysBeforeExpiration(
     new Date(offer.end_date)
   );
 
+  const router = useRouter();
+
   return (
     <div className="offer-overview">
-      <button
-        aria-label="メニューを開く"
-        onClick={() => setShowMenu((b) => !b)}
-      >
-        。。。
-      </button>
-      {showMenu ? (
-        <>
-          <div className="overlay" onClick={() => setShowMenu(false)} />
-          <div className="menu-popup">
-            <button onClick={() => alert(`応募${offer.id}を編集`)}>編集</button>
-            <button onClick={() => alert(`応募${offer.id}を削除`)}>削除</button>
-          </div>
-        </>
-      ) : null}
+      {editable && (
+        <div>
+          <button
+            aria-label="メニューを開く"
+            onClick={() => setShowMenu((b) => !b)}
+          >
+            。。。
+          </button>
+          {showMenu ? (
+            <>
+              <div className="overlay" onClick={() => setShowMenu(false)} />
+              <div className="menu-popup">
+                <button onClick={() => router.push(`/offer/edit/${offer.id}`)}>
+                  編集
+                </button>
+                <button onClick={() => alert(`応募${offer.id}を削除`)}>
+                  削除
+                </button>
+              </div>
+            </>
+          ) : null}
+        </div>
+      )}
       <h2>
         <Link href={`/board/offers/${offer.id}`}>{offer.title}</Link>
       </h2>
