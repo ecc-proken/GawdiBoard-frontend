@@ -64,6 +64,7 @@ function UserProfilePage() {
 
   return (
     <div>
+      <Link href="/board/offers">ガウディーボード</Link>
       <h1>ユーザー詳細</h1>
       <div className="user-info">
         <p>学籍番号: {user.student_number}</p>
