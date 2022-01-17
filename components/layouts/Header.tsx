@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from 'next/link';
+import NavLink from '../NavLink';
 
 export default function Header() {
   return (
@@ -18,34 +19,34 @@ export default function Header() {
           <nav>
             <ul>
               <li>
-                <Link href="/board/offers">
+                <NavLink href="/board/offers">
                   <a>募集を見る</a>
-                </Link>
+                </NavLink>
               </li>
               <li>
-                <Link href="/board/promotions">
+                <NavLink href="/board/promotions">
                   <a>宣伝を見る</a>
-                </Link>
+                </NavLink>
               </li>
               <li>
-                <Link href="/board/works">
+                <NavLink href="/board/works">
                   <a>作品を見る</a>
-                </Link>
+                </NavLink>
               </li>
               <li>
-                <Link href="/about">
+                <NavLink href="/about">
                   <a>当サイトについて</a>
-                </Link>
+                </NavLink>
               </li>
               <li>
-                <Link href="/how-to-use">
+                <NavLink href="/how-to-use">
                   <a>当サイトの使い方</a>
-                </Link>
+                </NavLink>
               </li>
               <li>
-                <Link href="/contact">
+                <NavLink href="/contact">
                   <a>お問い合わせ</a>
-                </Link>
+                </NavLink>
               </li>
             </ul>
           </nav>
@@ -96,6 +97,9 @@ export default function Header() {
         }
         nav a:hover {
           text-decoration: underline;
+        }
+        nav a.active {
+          color: tomato;
         }
       `}</style>
     </>
