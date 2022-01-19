@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
 import { resetIdCounter, Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import css from 'styled-jsx/css';
+import Header from '../../components/layouts/Header';
 import Layout from '../../components/layouts/Layout';
 import OfferOverview from '../../components/OfferOverview';
 import UserOfferProvider from '../../components/UserOfferProvider';
@@ -64,7 +65,6 @@ function UserProfilePage() {
 
   return (
     <div>
-      <Link href="/board/offers">ガウディーボード</Link>
       <h1>ユーザー詳細</h1>
       <div className="user-info">
         <p>学籍番号: {user.student_number}</p>
@@ -153,7 +153,12 @@ function UserProfilePage() {
 }
 
 UserProfilePage.getLayout = (page: ReactElement) => {
-  return <Layout title="ユーザーのプロフィール">{page}</Layout>;
+  return (
+    <>
+      <Header />
+      <Layout title="ユーザーのプロフィール">{page}</Layout>
+    </>
+  );
 };
 
 export default UserProfilePage;

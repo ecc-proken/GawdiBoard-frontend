@@ -1,4 +1,5 @@
 import type { ReactElement } from 'react';
+import Header from '../../../components/layouts/Header';
 import Layout from '../../../components/layouts/Layout';
 
 function WorkDetailPage() {
@@ -10,7 +11,12 @@ function WorkDetailPage() {
 }
 
 WorkDetailPage.getLayout = (page: ReactElement) => {
-  return <Layout title="作品の詳細">{page}</Layout>;
+  return (
+    <>
+      <Header />
+      <Layout title="作品の詳細">{page}</Layout>
+    </>
+  );
 };
 
 export default WorkDetailPage;
