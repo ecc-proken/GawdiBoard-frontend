@@ -11,6 +11,13 @@ const fakeQueryClient = new QueryClient({
   },
 });
 
+jest.mock('next/router', () => ({
+  useRouter: () => ({
+    isReady: true,
+    query: {},
+  }),
+}));
+
 describe('AllOffersPage', () => {
   it('募集一覧が表示される', async () => {
     render(
