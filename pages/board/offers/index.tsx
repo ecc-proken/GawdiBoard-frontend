@@ -1,16 +1,41 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import css from 'styled-jsx/css';
 import Header from '../../../components/layouts/Header';
 import Layout from '../../../components/layouts/Layout';
 import OfferOverview from '../../../components/OfferOverview';
 import PopupMenu from '../../../components/PopupMenu';
 import TagProvider from '../../../components/TagProvider';
+import { useOfferSearchForm } from '../../../hooks/forms/useOfferSearchForm';
 import { useInfiniteOffers } from '../../../hooks/requests/offers';
 
 function AllOffersPage() {
+  const router = useRouter();
+
   const [showFilter, setShowFilter] = useState(false);
+
+  // https://nextjs.org/docs/api-reference/next/router#router-object
+  // router.isReadyはuseEffectの中以外で使う想定で作られてないので
+  // useEffect内でisReadyを見ながら、もうフェッチしていいかを判断する。
+  const [shouldWaitFetch, setShouldWaitFetch] = useState(true);
+  useEffect(() => {
+    if (router.isReady) {
+      setShouldWaitFetch(false);
+    }
+  }, [router.isReady, setShouldWaitFetch]);
+
+  const offer_tag_ids = prepareTagIdsFromQuery(router.query.offer_tag_ids);
+
+  const { register, handleSubmit } = useOfferSearchForm();
+  const onSubmit = handleSubmit(({ offer_tag_ids }) => {
+    setShowFilter(false);
+    router.push({
+      pathname: '/board/offers',
+      query: { offer_tag_ids },
+    });
+  });
 
   const { className: filterClassName, styles: filterStyle } = css.resolve`
     .filter-popup {
@@ -31,7 +56,7 @@ function AllOffersPage() {
     hasNextPage,
     isFetching,
     isFetchingNextPage,
-  } = useInfiniteOffers();
+  } = useInfiniteOffers({ offer_tag_ids }, !shouldWaitFetch);
 
   const toggleFilter = () => {
     setShowFilter((b) => !b);
@@ -51,22 +76,27 @@ function AllOffersPage() {
       >
         <TagProvider tag_genre_id={1}>
           {({ data, isLoading, error }) => (
-            <form className="filter-popup">
+            <form className="filter-popup" onSubmit={onSubmit}>
               {isLoading && <span>ロード中...</span>}
               {error && (
                 <span>エラーが発生しました。詳細: {error.message}</span>
               )}
               {data &&
-                data.tags.map((tag) => (
-                  <label key={tag.id} className="filter-option">
-                    {tag.name}
-                    <input type="checkbox" value={tag.id} />
-                  </label>
+                data.tags.map((tag, i) => (
+                  <Fragment key={tag.id}>
+                    <label htmlFor={`tag${i}`} className="filter-option">
+                      {tag.name}
+                    </label>
+                    <input
+                      id={`tag${i}`}
+                      type="checkbox"
+                      value={tag.id}
+                      {...register(`offer_tag_ids.${i}`)}
+                    />
+                  </Fragment>
                 ))}
               <br />
-              <button onClick={() => setShowFilter(false)}>
-                この条件で検索
-              </button>
+              <button>この条件で検索</button>
             </form>
           )}
         </TagProvider>
@@ -111,6 +141,18 @@ function AllOffersPage() {
       {filterStyle}
     </div>
   );
+}
+
+function prepareTagIdsFromQuery(tagIds: string | string[] | undefined) {
+  if (tagIds === undefined) {
+    return [];
+  }
+
+  if (typeof tagIds === 'string') {
+    return [+tagIds];
+  }
+
+  return tagIds.map((id) => +id);
 }
 
 AllOffersPage.getLayout = (page: ReactElement) => {
