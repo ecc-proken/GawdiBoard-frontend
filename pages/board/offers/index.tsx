@@ -91,6 +91,7 @@ function AllOffersPage() {
                       id={`tag${i}`}
                       type="checkbox"
                       value={tag.id}
+                      defaultChecked={offer_tag_ids.includes(tag.id)}
                       {...register(`offer_tag_ids.${i}`)}
                     />
                   </Fragment>
