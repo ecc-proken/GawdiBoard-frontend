@@ -8,12 +8,8 @@ export default function Header() {
       <header>
         <div>
           <Link href="/board/offers">
-            <a aria-label="ガウディーボードトップへ">
-              <img
-                alt="ガウディーボードロゴ"
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/2048px-Google_%22G%22_Logo.svg.png"
-                className="logo"
-              />
+            <a className="home" aria-label="ガウディーボードトップへ">
+              <span className="g">G</span>awdi
             </a>
           </Link>
           <nav>
@@ -68,15 +64,26 @@ export default function Header() {
           white-space: nowrap;
           display: flex;
           justify-content: space-between;
-          padding: 8px;
+          align-items: center;
+          padding: 12px;
+          border-bottom: 1px solid #cdcdcd;
+          position: sticky;
+          background-color: #ffffff;
+          top: 0;
         }
-        .logo {
-          width: 60px;
+        .home {
+          font-size: 1.3rem;
+          color: var(--black-900);
+          text-decoration: none;
+        }
+        .g {
+          font-size: 1.5rem;
+          color: tomato;
         }
         .user-icon {
           width: 50px;
           clip-path: circle(50%);
-          margin: 20px 40px;
+          margin-right: 40px;
         }
         nav {
           display: inline-block;
@@ -92,14 +99,15 @@ export default function Header() {
         }
         nav a {
           text-decoration: none;
-          color: black;
+          color: var(--black-900);
           font-size: 1.2rem;
+          font-weight: 700;
         }
         nav a:hover {
           text-decoration: underline;
         }
         nav a.active {
-          color: tomato;
+          color: var(--accent-color);
         }
       `}</style>
     </>
