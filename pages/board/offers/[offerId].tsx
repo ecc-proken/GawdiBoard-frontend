@@ -11,10 +11,9 @@ import { useOffer } from '../../../hooks/requests/offers';
 const { className: modalClassName, styles: modalStyles } = css.resolve`
   .modal {
     position: absolute;
-    top: 30%;
-    right: 30%;
-    bottom: 30%;
+    right: 25%;
     left: 30%;
+    top: 30%;
     /* min-width: 450px; */
     padding: 20px;
     border: 1px solid gray;
@@ -26,7 +25,6 @@ const { className: modalClassName, styles: modalStyles } = css.resolve`
     .modal {
       top: 25%;
       right: 20px;
-      bottom: 25%;
       left: 20px;
     }
   }
@@ -112,6 +110,7 @@ function OfferDetailPage() {
           }
           button {
             margin-bottom: 8px;
+            position: absolute;
           }
           p {
             margin-bottom: 8px;
