@@ -38,6 +38,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
             box-sizing: border-box;
           }
 
+          :root {
+            --accent-color: #25a5ec;
+            --black-900: #333333;
+          }
+
           html,
           body {
             height: 100%;
