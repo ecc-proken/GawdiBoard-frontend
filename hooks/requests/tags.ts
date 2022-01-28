@@ -18,7 +18,7 @@ type GetTagsResponse = {
 };
 
 function useTags({ tag_genre_id }: GetTagsRequest) {
-  return useQuery<GetTagsResponse>(
+  return useQuery<GetTagsResponse, Error>(
     ['tags', { tag_genre_id }],
     () =>
       jsonClient('/tag-list', {

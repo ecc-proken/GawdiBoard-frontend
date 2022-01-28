@@ -62,17 +62,21 @@ type GetUserOffersResponse = {
   offers: Offer[];
 };
 
-function useInfiniteOffers(options: GetOffersRequest = {}) {
+function useInfiniteOffers(
+  { page = '1', offer_tag_ids = [] }: GetOffersRequest = {},
+  enabled = true
+) {
   const queryClient = useQueryClient();
   return useInfiniteQuery<GetOffersResponse, Error>(
-    'offers',
+    ['offers', offer_tag_ids],
     ({ pageParam }) => {
-      pageParam || (pageParam = options.page || 1);
+      pageParam || (pageParam = page);
       return jsonClient('/offer/list', {
-        params: { ...options, page: pageParam },
+        params: { offer_tag_ids, page: pageParam },
       });
     },
     {
+      enabled,
       getNextPageParam: (lastPage) => {
         const nextPage = lastPage.meta.current_page + 1;
         return lastPage.meta.last_page >= nextPage ? nextPage : false;
