@@ -3,6 +3,7 @@ import { useState } from 'react';
 import type { ReactElement } from 'react';
 import Modal from 'react-modal';
 import css from 'styled-jsx/css';
+import ApplicationForm from '../../../components/applicationForm';
 import Header from '../../../components/layouts/Header';
 import Layout from '../../../components/layouts/Layout';
 import { useOffer } from '../../../hooks/requests/offers';
@@ -10,10 +11,9 @@ import { useOffer } from '../../../hooks/requests/offers';
 const { className: modalClassName, styles: modalStyles } = css.resolve`
   .modal {
     position: absolute;
-    top: 30%;
-    right: 30%;
-    bottom: 30%;
+    right: 25%;
     left: 30%;
+    top: 30%;
     /* min-width: 450px; */
     padding: 20px;
     border: 1px solid gray;
@@ -25,7 +25,6 @@ const { className: modalClassName, styles: modalStyles } = css.resolve`
     .modal {
       top: 25%;
       right: 20px;
-      bottom: 25%;
       left: 20px;
     }
   }
@@ -92,12 +91,7 @@ function OfferDetailPage() {
             <div className="modal-header">
               <button onClick={() => setShowModal(false)}>X</button>
             </div>
-            <button>ぜひ参加したい</button>
-            <br />
-            <button>内容によっては参加したい</button>
-            <br />
-            <button>とりあえず話してみたい</button>
-            <br />
+            <ApplicationForm />
           </Modal>
         </div>
       )}
@@ -116,6 +110,7 @@ function OfferDetailPage() {
           }
           button {
             margin-bottom: 8px;
+            position: absolute;
           }
           p {
             margin-bottom: 8px;
