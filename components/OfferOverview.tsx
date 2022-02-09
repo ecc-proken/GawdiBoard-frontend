@@ -136,7 +136,7 @@ export default function OfferOverview({ offer, editable = false }: Props) {
           width: 45px;
           height: 45px;
           margin-right: 6px;
-          clip-path: circle(50%);
+          border-radius: 50%;
           background-color: #707070;
         }
         .user-class {
