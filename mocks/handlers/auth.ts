@@ -1,7 +1,7 @@
 import { rest } from 'msw';
 
 export const authHandlers = [
-  rest.get('/login', (req, res, ctx) => {
+  rest.get('/api/login', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -9,7 +9,7 @@ export const authHandlers = [
       })
     );
   }),
-  rest.get('/logout', (req, res, ctx) => {
+  rest.get('/api/logout', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -17,7 +17,7 @@ export const authHandlers = [
       })
     );
   }),
-  rest.get('/user/whoami', (req, res, ctx) => {
+  rest.get('/api/user/whoami', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({

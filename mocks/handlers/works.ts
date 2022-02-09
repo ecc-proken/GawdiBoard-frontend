@@ -1,7 +1,7 @@
 import { rest } from 'msw';
 
 export const worksHandlers = [
-  rest.get('/work/list', (req, res, ctx) => {
+  rest.get('/api/work/list', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -9,7 +9,7 @@ export const worksHandlers = [
       })
     );
   }),
-  rest.get('/user/work-list', (req, res, ctx) => {
+  rest.get('/api/user/work-list', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -17,7 +17,7 @@ export const worksHandlers = [
       })
     );
   }),
-  rest.get('/work/single', (req, res, ctx) => {
+  rest.get('/api/work/single', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -25,7 +25,7 @@ export const worksHandlers = [
       })
     );
   }),
-  rest.post('work/post', (req, res, ctx) => {
+  rest.post('/api/work/post', (req, res, ctx) => {
     return res(
       ctx.status(201),
       ctx.json({
@@ -33,10 +33,10 @@ export const worksHandlers = [
       })
     );
   }),
-  rest.post('work/delete', (req, res, ctx) => {
+  rest.post('/api/work/delete', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json({}));
   }),
-  rest.post('work/edit', (req, res, ctx) => {
+  rest.post('/api/work/edit', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({

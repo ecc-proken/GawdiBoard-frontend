@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from 'react-query';
+import { API_HOST } from '../../utils/configs';
 import { jsonClient } from '../../utils/httpClient';
 
 type User = {
@@ -35,7 +36,10 @@ type EditEmailResponse = {
 function useUser({ student_number }: GetUserRequest, enabled = true) {
   return useQuery<GetUserResponse, Error>(
     ['user', student_number],
-    () => jsonClient('/user/single'),
+    () =>
+      jsonClient(API_HOST + '/user/single', {
+        params: { student_number },
+      }),
     {
       enabled,
     }
@@ -45,7 +49,7 @@ function useUser({ student_number }: GetUserRequest, enabled = true) {
 function useEditUser() {
   return useMutation<EditUserResponse, Error, EditUserRequest>(
     (newUser) => {
-      return jsonClient('/mock/user/edit', {
+      return jsonClient(API_HOST + '/user/edit', {
         method: 'POST',
         body: { ...newUser },
       });
@@ -61,7 +65,7 @@ function useEditUser() {
 function useEditEmail() {
   return useMutation<EditEmailResponse, Error, EditEmailRequest>(
     (newEmail) => {
-      return jsonClient('/mock/user/edit-email', {
+      return jsonClient(API_HOST + '/user/edit-email', {
         method: 'POST',
         body: { ...newEmail },
       });

@@ -1,7 +1,7 @@
 import { rest } from 'msw';
 
 export const promotionsHandlers = [
-  rest.get('/promotion/list', (req, res, ctx) => {
+  rest.get('/api/promotion/list', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -9,7 +9,7 @@ export const promotionsHandlers = [
       })
     );
   }),
-  rest.get('/user/promotion-list', (req, res, ctx) => {
+  rest.get('/api/user/promotion-list', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -17,7 +17,7 @@ export const promotionsHandlers = [
       })
     );
   }),
-  rest.get('/promotion/single', (req, res, ctx) => {
+  rest.get('/api/promotion/single', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -25,7 +25,7 @@ export const promotionsHandlers = [
       })
     );
   }),
-  rest.post('promotion/post', (req, res, ctx) => {
+  rest.post('/api/promotion/post', (req, res, ctx) => {
     return res(
       ctx.status(201),
       ctx.json({
@@ -33,10 +33,10 @@ export const promotionsHandlers = [
       })
     );
   }),
-  rest.post('offer/delete', (req, res, ctx) => {
+  rest.post('/api/offer/delete', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json({}));
   }),
-  rest.post('promotion/edit', (req, res, ctx) => {
+  rest.post('/api/promotion/edit', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({

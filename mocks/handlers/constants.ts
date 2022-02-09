@@ -1,7 +1,7 @@
 import { rest } from 'msw';
 
 export const constantsHandlers = [
-  rest.get('/tag-list', (req, res, ctx) => {
+  rest.get('/api/tag-list', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({

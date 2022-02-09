@@ -2,7 +2,7 @@ import { rest } from 'msw';
 import { getPaginationInfo } from '../utils';
 
 export const offersHandlers = [
-  rest.get('/offer/list', (req, res, ctx) => {
+  rest.get('/api/offer/list', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -11,7 +11,7 @@ export const offersHandlers = [
       })
     );
   }),
-  rest.get('/user/offer-list', (req, res, ctx) => {
+  rest.get('/api/user/offer-list', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -20,7 +20,7 @@ export const offersHandlers = [
       })
     );
   }),
-  rest.get('/offer/single', (req, res, ctx) => {
+  rest.get('/api/offer/single', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -28,7 +28,7 @@ export const offersHandlers = [
       })
     );
   }),
-  rest.post('/mock/offer/post', (req, res, ctx) => {
+  rest.post('/api/offer/post', (req, res, ctx) => {
     return res(
       ctx.status(201),
       ctx.json({
@@ -36,10 +36,10 @@ export const offersHandlers = [
       })
     );
   }),
-  rest.post('offer/delete', (req, res, ctx) => {
+  rest.post('/api/offer/delete', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json({}));
   }),
-  rest.post('/mock/offer/edit', (req, res, ctx) => {
+  rest.post('/api/offer/edit', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -47,7 +47,7 @@ export const offersHandlers = [
       })
     );
   }),
-  rest.post('/offer/apply', (req, res, ctx) => {
+  rest.post('/api/offer/apply', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json({}));
   }),
 ];
