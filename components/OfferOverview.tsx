@@ -57,7 +57,7 @@ export default function OfferOverview({ offer, editable = false }: Props) {
           <a className="title">{offer.title}</a>
         </Link>
       </h2>
-      <p className="note">{offer.note || 'なし'}</p>
+      <p className="note">{getShortNote(offer.note || 'なし')}</p>
       <div className="info">
         <div
           className="user-info"
@@ -185,4 +185,12 @@ function getDaysBeforeExpiration(date: Date) {
 
   // 今日の24時になった瞬間（日付が変わった瞬間)消えるなら「残り0日」
   return Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+}
+
+function getShortNote(note: string) {
+  if (note.length <= 70) {
+    return note;
+  }
+
+  return note.slice(0, 70) + '...';
 }
