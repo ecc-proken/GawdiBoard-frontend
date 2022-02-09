@@ -65,13 +65,18 @@ function AllOffersPage() {
   return (
     <div>
       <h1>募集一覧</h1>
-      <div>
-        <Link href="/offer/post">投稿する</Link>
+      <div className="top">
+        <button className="filter-toggle" onClick={toggleFilter}>
+          フィルター
+          <img className="dropdown-icon" src="/dropdown.svg" />
+        </button>
+        <Link href="/offer/post">
+          <a className="new-post">
+            <img className="plus-icon" src="/plus.svg" />
+            投稿する
+          </a>
+        </Link>
       </div>
-      <button className="filter-toggle" onClick={toggleFilter}>
-        フィルター
-        <img className="dropdown-icon" src="/dropdown.svg" />
-      </button>
       <PopupMenu
         isOpen={showFilter}
         onRequestClose={() => setShowFilter(false)}
@@ -136,6 +141,23 @@ function AllOffersPage() {
             align-items: start;
             margin: 10px;
           }
+          .top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-inline: 32px;
+          }
+          .new-post {
+            background-color: var(--accent-color);
+            padding: 12px 18px 12px 12px;
+            border-radius: 5px;
+            color: #ffffff;
+            font-weight: 700;
+          }
+          .plus-icon {
+            margin-right: 18px;
+            vertical-align: middle;
+          }
           .filter-toggle {
             padding: 12px 18px;
             background-color: #ffffff;
@@ -143,6 +165,7 @@ function AllOffersPage() {
             border: 1px solid #9e9e9e;
             font-weight: 700;
             color: var(--black-900);
+            vertical-align: middle;
           }
           .dropdown-icon {
             margin-left: 18px;
