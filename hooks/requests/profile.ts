@@ -1,4 +1,4 @@
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { jsonClient } from '../../utils/httpClient';
 
 type User = {
@@ -7,6 +7,13 @@ type User = {
   email?: string;
   link?: string;
   self_introduction: string;
+};
+
+type GetUserRequest = {
+  student_number: string;
+};
+type GetUserResponse = {
+  user: User;
 };
 
 type EditUserRequest = {
@@ -24,6 +31,16 @@ type EditEmailRequest = {
 type EditEmailResponse = {
   user: User;
 };
+
+function useUser({ student_number }: GetUserRequest, enabled = true) {
+  return useQuery<GetUserResponse, Error>(
+    ['user', student_number],
+    () => jsonClient('/user/single'),
+    {
+      enabled,
+    }
+  );
+}
 
 function useEditUser() {
   return useMutation<EditUserResponse, Error, EditUserRequest>(
@@ -57,4 +74,4 @@ function useEditEmail() {
   );
 }
 export type { User };
-export { useEditUser, useEditEmail };
+export { useUser, useEditUser, useEditEmail };
