@@ -43,20 +43,20 @@ export default function OfferOverview({ offer, editable = false }: Props) {
           ) : null}
         </div>
       )}
-      {offer.picture ? (
-        <img
-          alt="ユーザーが投稿した画像"
-          src={offer.picture}
-          className="offer-image"
-        ></img>
-      ) : (
-        <div className="offer-image">{firstTagName}</div>
-      )}
-      <h2>
-        <Link href={`/board/offers/${offer.id}`}>
-          <a className="title">{offer.title}</a>
-        </Link>
-      </h2>
+      <Link href={`/board/offers/${offer.id}`}>
+        <a className="detail-page-link">
+          {offer.picture ? (
+            <img
+              alt="ユーザーが投稿した画像"
+              src={offer.picture}
+              className="offer-image"
+            ></img>
+          ) : (
+            <div className="offer-image">{firstTagName}</div>
+          )}
+          <h2 className="title">{offer.title}</h2>
+        </a>
+      </Link>
       <p className="note">{getShortNote(offer.note || 'なし')}</p>
       <div className="info">
         <div
@@ -109,10 +109,12 @@ export default function OfferOverview({ offer, editable = false }: Props) {
           color: #ffffff;
           margin-bottom: 12px;
         }
+        .detail-page-link {
+          text-decoration: none;
+        }
         .title {
           color: var(--black-900);
           font-size: 1.2rem;
-          text-decoration: none;
           margin-bottom: 6px;
         }
         .note {
