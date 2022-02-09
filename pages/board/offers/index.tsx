@@ -68,7 +68,10 @@ function AllOffersPage() {
       <div>
         <Link href="/offer/post">投稿する</Link>
       </div>
-      <button onClick={toggleFilter}>フィルター</button>
+      <button className="filter-toggle" onClick={toggleFilter}>
+        フィルター
+        <img className="dropdown-icon" src="/dropdown.svg" />
+      </button>
       <PopupMenu
         isOpen={showFilter}
         onRequestClose={() => setShowFilter(false)}
@@ -132,6 +135,17 @@ function AllOffersPage() {
             flex-wrap: wrap;
             align-items: start;
             margin: 10px;
+          }
+          .filter-toggle {
+            padding: 12px 18px;
+            background-color: #ffffff;
+            border-radius: 22.5px;
+            border: 1px solid #9e9e9e;
+            font-weight: 700;
+            color: var(--black-900);
+          }
+          .dropdown-icon {
+            margin-left: 18px;
           }
           .filter-option {
             white-space: nowrap;
