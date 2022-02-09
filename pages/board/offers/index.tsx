@@ -139,6 +139,7 @@ function AllOffersPage() {
             display: flex;
             flex-wrap: wrap;
             align-items: start;
+            justify-content: center;
             margin: 10px;
           }
           .top {
