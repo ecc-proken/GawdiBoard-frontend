@@ -4,6 +4,7 @@ import {
   useQueryClient,
   useMutation,
 } from 'react-query';
+import { API_HOST } from '../../utils/configs';
 import { jsonClient } from '../../utils/httpClient';
 import type { Tag } from './tags';
 import type { PaginatedResponse } from './typeUtils';
@@ -71,7 +72,7 @@ function useInfiniteOffers(
     ['offers', offer_tag_ids],
     ({ pageParam }) => {
       pageParam || (pageParam = page);
-      return jsonClient('/offer/list', {
+      return jsonClient(API_HOST + '/offer/list', {
         params: { offer_tag_ids, page: pageParam },
       });
     },
@@ -100,7 +101,7 @@ function useOffer({ offer_id }: GetOfferRequest, enabled = true) {
   return useQuery<GetOfferResponse>(
     ['offer', offer_id],
     () =>
-      jsonClient('/offer/single', {
+      jsonClient(API_HOST + '/offer/single', {
         params: { offer_id: offer_id.toString() },
       }),
     {
@@ -113,7 +114,7 @@ function useAddOffer() {
   const queryClient = useQueryClient();
   return useMutation<AddOfferResponse, Error, AddOfferRequest>(
     (newOffer) => {
-      return jsonClient('/mock/offer/post', {
+      return jsonClient(API_HOST + '/offer/post', {
         method: 'POST',
         body: { ...newOffer },
       });
@@ -131,7 +132,7 @@ function useEditOffer() {
   const queryClient = useQueryClient();
   return useMutation<EditOfferResponse, Error, EditOfferRequest>(
     (newOffer) => {
-      return jsonClient('/mock/offer/edit', {
+      return jsonClient(API_HOST + '/offer/edit', {
         method: 'POST',
         body: { ...newOffer },
       });
@@ -154,7 +155,7 @@ function useUserOffers(
   return useQuery<GetUserOffersResponse>(
     ['offers', 'user', student_number],
     () =>
-      jsonClient('/user/offer-list', {
+      jsonClient(API_HOST + '/user/offer-list', {
         params: {
           student_number,
         },
