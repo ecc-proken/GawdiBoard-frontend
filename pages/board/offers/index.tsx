@@ -104,8 +104,9 @@ function AllOffersPage() {
                     />
                   </Fragment>
                 ))}
-              <br />
-              <button>この条件で検索</button>
+              <div className="search-button-ccontainer">
+                <button className="basic-button search">この条件で検索</button>
+              </div>
             </form>
           )}
         </TagProvider>
@@ -123,8 +124,9 @@ function AllOffersPage() {
         </div>
       )}
       {hasNextPage && (
-        <div>
+        <div className="load-button-container">
           <button
+            className="basic-button load-more"
             onClick={() => fetchNextPage()}
             disabled={!hasNextPage || isFetchingNextPage}
           >
@@ -135,6 +137,11 @@ function AllOffersPage() {
       {isFetching && <p>ロード中...</p>}
       <style jsx>
         {`
+          .search-button-ccontainer {
+            display: flex;
+            justify-content: flex-end;
+            margin-right: 20px;
+          }
           .offers-container {
             display: flex;
             flex-wrap: wrap;
@@ -174,6 +181,18 @@ function AllOffersPage() {
           .filter-option {
             white-space: nowrap;
             margin: 8px;
+          }
+          .load-button-container {
+            display: flex;
+            justify-content: center;
+          }
+          .basic-button {
+            color: #ffffff;
+            background-color: var(--accent-color);
+            border: 0;
+            padding: 12px 18px;
+            border-radius: 5px;
+            font-weight: 700;
           }
         `}
       </style>
