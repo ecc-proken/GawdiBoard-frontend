@@ -65,7 +65,6 @@ function AllOffersPage() {
 
   return (
     <div>
-      <h1>募集一覧</h1>
       <div className="top">
         <button className="filter-toggle" onClick={toggleFilter}>
           フィルター
@@ -158,6 +157,7 @@ function AllOffersPage() {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            margin-top: 24px;
             padding-inline: 32px;
           }
           .new-post {
