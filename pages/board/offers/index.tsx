@@ -166,6 +166,7 @@ function AllOffersPage() {
             border-radius: 5px;
             color: #ffffff;
             font-weight: 700;
+            text-decoration: none;
           }
           .plus-icon {
             margin-right: 18px;
