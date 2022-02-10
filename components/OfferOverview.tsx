@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import type { Offer } from '../hooks/requests/offers';
 
 type Props = {
@@ -17,10 +17,6 @@ export default function OfferOverview({ offer, editable = false }: Props) {
   const router = useRouter();
 
   const firstTagName = offer.tags[0].name;
-  const randomIconSize = useMemo(
-    () => Math.floor(Math.random() * (300 + 1 - 200)) + 200,
-    []
-  );
 
   return (
     <div className="offer-overview">
@@ -47,20 +43,29 @@ export default function OfferOverview({ offer, editable = false }: Props) {
           ) : null}
         </div>
       )}
-      <div className="offer-image">{firstTagName}</div>
-      <h2>
-        <Link href={`/board/offers/${offer.id}`}>
-          <a className="title">{offer.title}</a>
-        </Link>
-      </h2>
-      <p className="note">{offer.note || 'なし'}</p>
+      <Link href={`/board/offers/${offer.id}`}>
+        <a className="detail-page-link">
+          {offer.picture ? (
+            <img
+              alt="ユーザーが投稿した画像"
+              src={offer.picture}
+              className="offer-image"
+            ></img>
+          ) : (
+            <div className="offer-image">{firstTagName}</div>
+          )}
+          <h2 className="title">{offer.title}</h2>
+        </a>
+      </Link>
+      <p className="note">{getShortNote(offer.note || 'なし')}</p>
       <div className="info">
-        <div className="user-info">
-          <img
-            alt="募集主のアイコン"
-            src={`https://placeimg.com/${randomIconSize}/${randomIconSize}/nature`}
-            className="user-icon"
-          ></img>
+        <div
+          className="user-info"
+          onClick={() => {
+            router.push(`/user/${offer.student_number}`);
+          }}
+        >
+          <div className="user-icon"></div>
           <div>
             <div>
               <span className="user-class">{offer.user_class || ''}</span>
@@ -85,8 +90,7 @@ export default function OfferOverview({ offer, editable = false }: Props) {
       </div>
       <style jsx>{`
         .offer-overview {
-          width: 30%;
-          min-width: 250px;
+          width: 320px;
           margin: 4px;
           padding: 8px;
           color: var(--black-900);
@@ -105,10 +109,12 @@ export default function OfferOverview({ offer, editable = false }: Props) {
           color: #ffffff;
           margin-bottom: 12px;
         }
+        .detail-page-link {
+          text-decoration: none;
+        }
         .title {
           color: var(--black-900);
           font-size: 1.2rem;
-          text-decoration: none;
           margin-bottom: 6px;
         }
         .note {
@@ -124,11 +130,16 @@ export default function OfferOverview({ offer, editable = false }: Props) {
           display: flex;
           align-items: flex-end;
         }
+        .user-info:hover {
+          font-weight: 900;
+          cursor: pointer;
+        }
         .user-icon {
           width: 45px;
           height: 45px;
           margin-right: 6px;
-          clip-path: circle(50%);
+          border-radius: 50%;
+          background-color: #707070;
         }
         .user-class {
           margin-right: 8px;
@@ -176,4 +187,12 @@ function getDaysBeforeExpiration(date: Date) {
 
   // 今日の24時になった瞬間（日付が変わった瞬間)消えるなら「残り0日」
   return Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+}
+
+function getShortNote(note: string) {
+  if (note.length <= 70) {
+    return note;
+  }
+
+  return note.slice(0, 70) + '...';
 }
