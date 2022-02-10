@@ -45,7 +45,8 @@ function AllOffersPage() {
       margin-left: 4px;
       background-color: white;
       border-radius: 8px;
-      border: solid grey 1px;
+      padding: 16px;
+      box-shadow: 4px 8px 24px rgba(155, 155, 155, 0.7);
     }
   `;
 
@@ -85,25 +86,29 @@ function AllOffersPage() {
         <TagProvider tag_genre_id={1}>
           {({ data, isLoading, error }) => (
             <form className="filter-popup" onSubmit={onSubmit}>
+              <h2 className="filter-title">絞り込み</h2>
               {isLoading && <span>ロード中...</span>}
               {error && (
                 <span>エラーが発生しました。詳細: {error.message}</span>
               )}
-              {data &&
-                data.tags.map((tag, i) => (
-                  <Fragment key={tag.id}>
-                    <label htmlFor={`tag${i}`} className="filter-option">
-                      {tag.name}
-                    </label>
-                    <input
-                      id={`tag${i}`}
-                      type="checkbox"
-                      value={tag.id}
-                      defaultChecked={offer_tag_ids.includes(tag.id)}
-                      {...register(`offer_tag_ids.${i}`)}
-                    />
-                  </Fragment>
-                ))}
+              {data && (
+                <div className="filter-option-wrapper">
+                  {data.tags.map((tag, i) => (
+                    <div key={tag.id} className="filter-option">
+                      <input
+                        id={`tag${i}`}
+                        type="checkbox"
+                        value={tag.id}
+                        defaultChecked={offer_tag_ids.includes(tag.id)}
+                        {...register(`offer_tag_ids.${i}`)}
+                      />
+                      <label htmlFor={`tag${i}`} className="filter-label">
+                        {tag.name}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              )}
               <div className="search-button-ccontainer">
                 <button className="basic-button search">この条件で検索</button>
               </div>
@@ -178,9 +183,21 @@ function AllOffersPage() {
           .dropdown-icon {
             margin-left: 18px;
           }
+          .filter-title {
+            margin-bottom: 8px;
+          }
+          .filter-option-wrapper {
+            padding-block: 12px;
+            border-block: 1px solid #cdcdcd;
+            margin-bottom: 12px;
+          }
           .filter-option {
+            display: inline;
             white-space: nowrap;
-            margin: 8px;
+          }
+          .filter-label {
+            margin-right: 8px;
+            line-height: 2;
           }
           .load-button-container {
             display: flex;
