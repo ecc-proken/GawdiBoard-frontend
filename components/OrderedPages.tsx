@@ -1,5 +1,10 @@
 import { Children, createContext, Fragment, useContext, useState } from 'react';
-import type { ReactNode, ReactElement } from 'react';
+import type {
+  ComponentProps,
+  MouseEvent,
+  ReactNode,
+  ReactElement,
+} from 'react';
 
 type WrapperProps = {
   children: ReactElement | ReactElement[];
@@ -68,14 +73,36 @@ function Page({ children }: PageProps) {
   return <>{children}</>;
 }
 
-function ForwardButton({ children }: { children: ReactNode }) {
+function ForwardButton({ children, ...props }: ComponentProps<'button'>) {
   const { pageForward } = useOrderedPages();
-  return <button onClick={pageForward}>{children}</button>;
+
+  const onClick = (e: MouseEvent<HTMLButtonElement>) => {
+    if (props.onClick) {
+      props.onClick(e);
+    }
+    pageForward();
+  };
+  return (
+    <button type="button" onClick={onClick} {...props}>
+      {children}
+    </button>
+  );
 }
 
-function BackButton({ children }: { children: ReactNode }) {
+function BackButton({ children, ...props }: ComponentProps<'button'>) {
   const { pageBack } = useOrderedPages();
-  return <button onClick={pageBack}>{children}</button>;
+
+  const onClick = (e: MouseEvent<HTMLButtonElement>) => {
+    if (props.onClick) {
+      props.onClick(e);
+    }
+    pageBack();
+  };
+  return (
+    <button onClick={onClick} {...props}>
+      {children}
+    </button>
+  );
 }
 
 function Indicator() {

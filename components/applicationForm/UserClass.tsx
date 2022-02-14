@@ -1,5 +1,5 @@
 import type { ChangeEvent } from 'react';
-import { ForwardButton, BackButton, useOrderedPages } from '../OrderedPages';
+import { ForwardButton, BackButton } from '../OrderedPages';
 
 type Props = {
   userClass: string;
@@ -7,7 +7,6 @@ type Props = {
 };
 
 function UserClass({ userClass, setUserClass }: Props) {
-  const { pageForward } = useOrderedPages();
   const onChangeUserClass = (e: ChangeEvent<HTMLInputElement>) => {
     setUserClass(e.target.value);
   };
@@ -29,10 +28,8 @@ function UserClass({ userClass, setUserClass }: Props) {
         </p>
       </div>
       <div className="page-controller">
-        <BackButton>← 戻る</BackButton>
-        <button onClick={() => pageForward()} disabled={userClass.length === 0}>
-          進む →
-        </button>
+        <BackButton>戻る</BackButton>
+        <ForwardButton disabled={userClass.length === 0}>進む</ForwardButton>
       </div>
       <style jsx>{`
         .user_class_wrapper {

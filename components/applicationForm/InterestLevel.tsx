@@ -1,4 +1,4 @@
-import { useOrderedPages } from '../OrderedPages';
+import { ForwardButton } from '../OrderedPages';
 
 const INTEREST_LEVELS = {
   HIGH: 1,
@@ -12,8 +12,6 @@ type Props = {
 };
 
 function InterestLevel({ interest, setInterest }: Props) {
-  const { pageForward } = useOrderedPages();
-
   const handleInterestSelected = (fn: () => void) => {
     return () => {
       fn();
@@ -58,9 +56,7 @@ function InterestLevel({ interest, setInterest }: Props) {
         </button>
       </div>
       <div className="page-controller">
-        <button onClick={() => pageForward()} disabled={interest === null}>
-          進む →
-        </button>
+        <ForwardButton disabled={interest === null}>次へ</ForwardButton>
       </div>
       <style jsx>{`
         .instruction {
