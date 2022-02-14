@@ -1,19 +1,21 @@
 import { ChangeEvent } from 'react';
 import { BackButton, useOrderedPages } from '../OrderedPages';
-function Message() {
+
+type Props = {
+  message: string;
+  setMessage: (s: string) => void;
+  onSubmit: () => void;
+};
+
+function Message({ message, setMessage, onSubmit }: Props) {
   const { pageForward } = useOrderedPages();
   const onMessageChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
   };
 
-  const onSubmit = () => {
-    // TODO: API呼ぶ
+  const handleSubmit = () => {
+    onSubmit();
     pageForward();
-  };
-
-  // フェイク
-  const setMessage = (message: string) => {
-    return;
   };
 
   return (
@@ -26,12 +28,13 @@ function Message() {
           id="message"
           name="message"
           onChange={onMessageChange}
+          value={message}
           aria-label="募集主へのメッセージ"
         ></textarea>
       </div>
       <div className="page-controller">
         <BackButton>← 戻る</BackButton>
-        <button onClick={onSubmit}>送信</button>
+        <button onClick={handleSubmit}>送信</button>
       </div>
       <style jsx>{`
         .instruction {
