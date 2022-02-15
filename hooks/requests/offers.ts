@@ -36,6 +36,14 @@ type GetOfferResponse = {
   offer: Offer;
 };
 
+type ApplyRequest = {
+  offer_id: number;
+  interest: number;
+  user_class: string;
+  message: string;
+};
+type ApplyResponse = void;
+
 type AddOfferRequest = {
   title: string;
   target: string;
@@ -110,13 +118,32 @@ function useOffer({ offer_id }: GetOfferRequest, enabled = true) {
   );
 }
 
+function useApplyOffer() {
+  return useMutation<ApplyResponse, Error, ApplyRequest>((options) => {
+    return jsonClient(API_HOST + '/offer/apply', {
+      method: 'POST',
+      body: { ...options },
+    });
+  });
+}
+
 function useAddOffer() {
   const queryClient = useQueryClient();
   return useMutation<AddOfferResponse, Error, AddOfferRequest>(
     (newOffer) => {
+      const m = (new Date(newOffer.end_date).getMonth() + 1).toString();
+      const d = new Date(newOffer.end_date).getDate().toString();
+
+      const ymd =
+        new Date(newOffer.end_date).getFullYear() +
+        '-' +
+        (m.length === 1 ? '0' + m : m) +
+        '-' +
+        (d.length === 1 ? '0' + d : d);
+
       return jsonClient(API_HOST + '/offer/post', {
         method: 'POST',
-        body: { ...newOffer },
+        body: { ...newOffer, picture: null, end_date: ymd },
       });
     },
     {
@@ -173,6 +200,7 @@ function useUserOffers(
 
 export type { Offer };
 export {
+  useApplyOffer,
   useAddOffer,
   useEditOffer,
   useInfiniteOffers,

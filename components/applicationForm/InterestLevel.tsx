@@ -1,18 +1,17 @@
-import { ForwardButton, useOrderedPages } from '../OrderedPages';
+import { ForwardButton } from '../OrderedPages';
+import { useApplyFormContext } from '.';
 
 const INTEREST_LEVELS = {
-  HIGH: 3,
+  HIGH: 1,
   MIDDLE: 2,
-  LOW: 1,
+  LOW: 3,
 };
 
 function InterestLevel() {
-  const { pageForward } = useOrderedPages();
-
+  const { interest, setInterest } = useApplyFormContext();
   const handleInterestSelected = (fn: () => void) => {
     return () => {
       fn();
-      pageForward();
     };
   };
 
@@ -28,27 +27,42 @@ function InterestLevel() {
     setInterest(INTEREST_LEVELS.LOW);
   });
 
-  // フェイク
-  const setInterest = (interest: number) => {
-    return;
-  };
-
   return (
     <>
       <div className="interest-selector">
-        <p className="instruction">この募集にどのくらい興味がありますか？</p>
-        <button onClick={onHighSelected}>是非参加したい</button>
+        <p className="instruction">現在の興味度を選択してください</p>
+        <button
+          type="button"
+          className={`interest-option ${interest === 1 ? 'selected' : ''}`}
+          onClick={onHighSelected}
+        >
+          是非参加したい
+        </button>
         <br />
-        <button onClick={onMiddleSelected}>内容によっては参加したい</button>
+        <button
+          type="button"
+          className={`interest-option ${interest === 2 ? 'selected' : ''}`}
+          onClick={onMiddleSelected}
+        >
+          内容によっては参加したい
+        </button>
         <br />
-        <button onClick={onLowSelected}>とりあえず話してみたい</button>
+        <button
+          type="button"
+          className={`interest-option ${interest === 3 ? 'selected' : ''}`}
+          onClick={onLowSelected}
+        >
+          とりあえず話してみたい
+        </button>
       </div>
-      {/* <div className="page-controller">
-        <ForwardButton>進む →</ForwardButton>
-      </div> */}
+      <div className="page-controller">
+        <ForwardButton disabled={interest === null}>次へ</ForwardButton>
+      </div>
       <style jsx>{`
         .instruction {
-          margin-bottom: 16px;
+          font-weight: 700;
+          font-size: 1.2rem;
+          margin-bottom: 20px;
         }
         .interest-selector {
           text-align: center;
@@ -57,14 +71,21 @@ function InterestLevel() {
         .interest-selector button {
           padding: 16px 32px;
           border-radius: 28px;
+          font-weight: 800;
+          margin-bottom: 12px;
+          background-color: #ffffff;
+          border: 1px solid #25a5ec;
+          color: #25a5ec;
+        }
+        .interest-selector button.selected {
+          padding: 16px 32px;
+          border-radius: 28px;
           border: 0;
           color: #ffffff;
           background-color: #25a5ec;
-          font-weight: 800;
-          margin-bottom: 12px;
         }
-        button:hover {
-          background-color: #36b3f7;
+        .interest-selector button:hover {
+          cursor: pointer;
         }
         .page-controller {
           text-align: center;

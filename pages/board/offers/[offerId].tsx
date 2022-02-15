@@ -91,7 +91,7 @@ function OfferDetailPage() {
             <div className="modal-header">
               <button onClick={() => setShowModal(false)}>X</button>
             </div>
-            <ApplicationForm />
+            <ApplicationForm offerId={offer.id} />
           </Modal>
         </div>
       )}

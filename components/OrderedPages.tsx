@@ -1,9 +1,22 @@
-import { Children, createContext, Fragment, useContext, useState } from 'react';
-import type { ReactNode, ReactElement } from 'react';
+// react-tabsの実装をみた感じ<TabList />内の<Tab />の数と
+// <TabPanel />の数は別々に数えてるので、<TabList />を使わずに
+// <TabPanel />だけ使えば同じことをもっと簡単に達成できそう。
+// なのだけど、<TabPanel />と<Tab />の数が合わないと警告が出るので正規の使い方じゃなさげ。
 
-type WrapperProps = {
-  children: ReactElement | ReactElement[];
-};
+import React, {
+  Children,
+  cloneElement,
+  createContext,
+  Fragment,
+  useContext,
+  useState,
+} from 'react';
+import type {
+  ComponentProps,
+  MouseEvent,
+  ReactNode,
+  ReactElement,
+} from 'react';
 
 type OrderedPageContextType = {
   activeIndex: number;
@@ -20,20 +33,45 @@ function useOrderedPages() {
   return useContext(OrderedPageContext);
 }
 
-function OrderedPages({ children }: WrapperProps) {
+function recursiveMap(
+  children: ReactNode,
+  callback: (child: ReactElement) => ReactNode
+): ReactNode {
+  return Children.map(children, (child) => {
+    if (child === null || typeof child !== 'object') {
+      return child;
+    }
+
+    if ('type' in child && child.type === Page) {
+      return callback(child);
+    }
+
+    if (
+      'props' in child &&
+      'children' in child.props &&
+      typeof child.props.children === 'object'
+    ) {
+      return cloneElement(child, {
+        ...child.props,
+        children: recursiveMap(child.props.children, callback),
+      });
+    }
+
+    return child;
+  });
+}
+
+function OrderedPages({ children }: { children: ReactNode }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Page以外のコンポーネントを使いたくなるユースケースが考えにくいのと
-  // Pageしかないと仮定することでロジックを考えるのがかなり楽になるのでPage以外が直下にあったらエラーを吐く
-  Children.forEach(children, (child) => {
-    if (child.type !== Page) {
-      throw new Error(
-        '<OrderedPages />直下の子要素には<Page />以外は使用できません。'
-      );
-    }
+  let pageCount = 0;
+  const childrenCopy = recursiveMap(children, (child) => {
+    pageCount++;
+    return cloneElement(child, {
+      ...child.props,
+      selected: activeIndex === pageCount - 1,
+    });
   });
-
-  const pageCount = Children.count(children);
 
   const pageForward = () => {
     setActiveIndex((i) => Math.min(i + 1, pageCount - 1));
@@ -43,65 +81,85 @@ function OrderedPages({ children }: WrapperProps) {
     setActiveIndex((i) => Math.max(i - 1, 0));
   };
 
-  const activePage = Children.map(children, (child, index) => {
-    if (activeIndex === index) {
-      return child;
-    }
-
-    return null;
-  });
-
   return (
     <OrderedPageContext.Provider
       value={{ activeIndex, pageCount, pageForward, pageBack }}
     >
-      {activePage}
+      {childrenCopy}
     </OrderedPageContext.Provider>
   );
 }
 
-type PageProps = {
+function Page({
+  children,
+  selected,
+}: {
   children: ReactNode;
-};
-
-function Page({ children }: PageProps) {
-  return <>{children}</>;
+  selected?: boolean;
+}) {
+  return selected ? <>{children}</> : null;
 }
 
-function ForwardButton({ children }: { children: ReactNode }) {
+function ForwardButton({ children, ...props }: ComponentProps<'button'>) {
   const { pageForward } = useOrderedPages();
-  return <button onClick={pageForward}>{children}</button>;
+
+  const onClick = (e: MouseEvent<HTMLButtonElement>) => {
+    if (props.onClick) {
+      props.onClick(e);
+    }
+    pageForward();
+  };
+  return (
+    <>
+      <button type="button" onClick={onClick} {...props}>
+        {children}
+      </button>
+      <style jsx>
+        {`
+          button {
+            background-color: var(--accent-color);
+            padding: 12px 48px;
+            border-radius: 4px;
+            border: 0;
+            color: #ffffff;
+            font-weight: 700;
+          }
+          button:disabled {
+            background-color: #b1d9f0;
+            cursor: not-allowed;
+          }
+        `}
+      </style>
+    </>
+  );
 }
 
-function BackButton({ children }: { children: ReactNode }) {
+function BackButton({ children, ...props }: ComponentProps<'button'>) {
   const { pageBack } = useOrderedPages();
-  return <button onClick={pageBack}>{children}</button>;
-}
 
-function Indicator() {
-  const { pageCount, activeIndex } = useOrderedPages();
-
-  const pageIndices = Array.from(Array(pageCount).keys());
-  const indices = pageIndices.map((index) => (
-    <Fragment key={index}>
-      <span>・</span>
+  const onClick = (e: MouseEvent<HTMLButtonElement>) => {
+    if (props.onClick) {
+      props.onClick(e);
+    }
+    pageBack();
+  };
+  return (
+    <>
+      <button onClick={onClick} {...props}>
+        {children}
+      </button>
       <style jsx>{`
-        span {
-          font-size: 1.6rem;
-          color: ${index === activeIndex ? 'tomato' : 'black'};
+        button {
+          border: 1px solid var(--accent-color);
+          padding: 12px 48px;
+          border-radius: 4px;
+          color: var(--accent-color);
+          background-color: #ffffff;
+          font-weight: 700;
         }
       `}</style>
-    </Fragment>
-  ));
-
-  return <>{indices}</>;
+    </>
+  );
 }
 
-export {
-  OrderedPages,
-  Page,
-  ForwardButton,
-  BackButton,
-  useOrderedPages,
-  Indicator,
-};
+export { OrderedPages, Page, ForwardButton, BackButton, useOrderedPages };
