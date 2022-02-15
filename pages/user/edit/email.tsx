@@ -4,10 +4,13 @@ import type { ReactElement } from 'react';
 import Modal from 'react-modal';
 import Layout from '../../../components/layouts/Layout';
 import { useEmailForm } from '../../../hooks/forms/useEmailForm';
+import { useLoginUser } from '../../../hooks/requests/auth';
 import { useEditEmail } from '../../../hooks/requests/profile';
-import { user } from '../../../mocks/handlers/auth';
 
 function EditEmailPage() {
+  const { data } = useLoginUser();
+  const user = data?.user;
+
   const [showModal, setShowModal] = useState(false);
   const {
     register,
@@ -29,11 +32,11 @@ function EditEmailPage() {
   });
   const handleCancel = () => {
     if (confirm('入力内容を破棄しますか?')) {
-      router.push(`/user/${user.student_number}`);
+      router.push(`/user/${user?.student_number}`);
     }
   };
   const handleDone = () => {
-    router.push(`/user/${user.student_number}`);
+    router.push(`/user/${user?.student_number}`);
   };
 
   return (
