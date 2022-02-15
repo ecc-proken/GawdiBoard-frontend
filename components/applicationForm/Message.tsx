@@ -1,21 +1,12 @@
 import { ChangeEvent } from 'react';
-import { BackButton, useOrderedPages } from '../OrderedPages';
+import { BackButton } from '../OrderedPages';
+import { useApplyFormContext } from '.';
 
-type Props = {
-  message: string;
-  setMessage: (s: string) => void;
-  onSubmit: () => void;
-};
+function Message() {
+  const { message, setMessage } = useApplyFormContext();
 
-function Message({ message, setMessage, onSubmit }: Props) {
-  const { pageForward } = useOrderedPages();
   const onMessageChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
-  };
-
-  const handleSubmit = () => {
-    onSubmit();
-    pageForward();
   };
 
   return (
@@ -34,7 +25,7 @@ function Message({ message, setMessage, onSubmit }: Props) {
       </div>
       <div className="page-controller">
         <BackButton>← 戻る</BackButton>
-        <button onClick={handleSubmit}>送信</button>
+        <button type="submit">送信</button>
       </div>
       <style jsx>{`
         .instruction {

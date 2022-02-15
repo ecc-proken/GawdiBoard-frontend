@@ -1,70 +1,111 @@
-import { useState } from 'react';
+import { createContext, useContext, useState } from 'react';
+import type { Dispatch, MouseEvent, ReactNode, SetStateAction } from 'react';
 import { useApplyOffer } from '../../hooks/requests/offers';
-import { OrderedPages, Page, Indicator } from '../OrderedPages';
+import {
+  OrderedPages,
+  Page,
+  Indicator,
+  useOrderedPages,
+} from '../OrderedPages';
 import Completed from './Completed';
 import InterestLevel from './InterestLevel';
 import Message from './Message';
 import UserClass from './UserClass';
 
-type Props = {
+type ApplyFormContextType = {
+  interest: number | null;
+  setInterest: Dispatch<SetStateAction<number | null>>;
+  userClass: string;
+  setUserClass: Dispatch<SetStateAction<string>>;
+  message: string;
+  setMessage: Dispatch<SetStateAction<string>>;
+};
+const ApplyFormContext = createContext<ApplyFormContextType>(
+  {} as ApplyFormContextType
+);
+ApplyFormContext.displayName = 'ApplyFormContext';
+
+export function useApplyFormContext() {
+  return useContext(ApplyFormContext);
+}
+
+type PagedApplyFormProps = {
   offerId: number;
+  children: ReactNode;
 };
 
-function ApplicationForm({ offerId }: Props) {
+function PagedApplyForm({ offerId, children }: PagedApplyFormProps) {
+  const { pageForward } = useOrderedPages();
   const { mutate } = useApplyOffer();
   const [interest, setInterest] = useState<number | null>(null);
   const [userClass, setUserClass] = useState('');
   const [message, setMessage] = useState('');
 
-  const onSubmit = () => {
-    mutate({
-      offer_id: offerId,
-      interest: interest || 1,
-      user_class: userClass,
-      message,
-    });
+  const onSubmit = (e: MouseEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    mutate(
+      {
+        offer_id: offerId,
+        interest: interest || 1,
+        user_class: userClass,
+        message,
+      },
+      {
+        onSuccess() {
+          pageForward();
+        },
+      }
+    );
   };
+
   return (
-    <div role="form" aria-label="募集主に連絡をとる">
-      <OrderedPages>
+    <ApplyFormContext.Provider
+      value={{
+        interest,
+        setInterest,
+        userClass,
+        setUserClass,
+        message,
+        setMessage,
+      }}
+    >
+      <form onSubmit={onSubmit}>{children}</form>
+    </ApplyFormContext.Provider>
+  );
+}
+
+type ApplyFormProps = {
+  offerId: number;
+};
+
+function ApplyForm({ offerId }: ApplyFormProps) {
+  return (
+    <OrderedPages>
+      <PagedApplyForm offerId={offerId}>
         <Page>
           <div className="indicator">
             <Indicator />
           </div>
-          <InterestLevel interest={interest} setInterest={setInterest} />
+          <InterestLevel />
         </Page>
         <Page>
           <div className="indicator">
             <Indicator />
           </div>
-          <UserClass userClass={userClass} setUserClass={setUserClass} />
+          <UserClass />
         </Page>
         <Page>
           <div className="indicator">
             <Indicator />
           </div>
-          <Message
-            message={message}
-            setMessage={setMessage}
-            onSubmit={onSubmit}
-          />
+          <Message />
         </Page>
         <Page>
           <Completed />
         </Page>
-      </OrderedPages>
-      <style jsx>{`
-        .indicator {
-          text-align: center;
-          margin-bottom: 24px;
-        }
-        .page-controller {
-          text-align: center;
-          margin-top: 24px;
-        }
-      `}</style>
-    </div>
+      </PagedApplyForm>
+    </OrderedPages>
   );
 }
 
-export default ApplicationForm;
+export default ApplyForm;

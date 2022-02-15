@@ -1,4 +1,5 @@
 import { ForwardButton } from '../OrderedPages';
+import { useApplyFormContext } from '.';
 
 const INTEREST_LEVELS = {
   HIGH: 1,
@@ -6,12 +7,8 @@ const INTEREST_LEVELS = {
   LOW: 3,
 };
 
-type Props = {
-  interest: number | null;
-  setInterest: (n: number) => void;
-};
-
-function InterestLevel({ interest, setInterest }: Props) {
+function InterestLevel() {
+  const { interest, setInterest } = useApplyFormContext();
   const handleInterestSelected = (fn: () => void) => {
     return () => {
       fn();
@@ -35,6 +32,7 @@ function InterestLevel({ interest, setInterest }: Props) {
       <div className="interest-selector">
         <p className="instruction">この募集にどのくらい興味がありますか？</p>
         <button
+          type="button"
           className={`interest-option ${interest === 1 ? 'selected' : ''}`}
           onClick={onHighSelected}
         >
@@ -42,6 +40,7 @@ function InterestLevel({ interest, setInterest }: Props) {
         </button>
         <br />
         <button
+          type="button"
           className={`interest-option ${interest === 2 ? 'selected' : ''}`}
           onClick={onMiddleSelected}
         >
@@ -49,6 +48,7 @@ function InterestLevel({ interest, setInterest }: Props) {
         </button>
         <br />
         <button
+          type="button"
           className={`interest-option ${interest === 3 ? 'selected' : ''}`}
           onClick={onLowSelected}
         >

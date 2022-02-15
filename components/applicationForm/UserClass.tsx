@@ -1,12 +1,9 @@
 import type { ChangeEvent } from 'react';
 import { ForwardButton, BackButton } from '../OrderedPages';
+import { useApplyFormContext } from '.';
 
-type Props = {
-  userClass: string;
-  setUserClass: (s: string) => void;
-};
-
-function UserClass({ userClass, setUserClass }: Props) {
+function UserClass() {
+  const { userClass, setUserClass } = useApplyFormContext();
   const onChangeUserClass = (e: ChangeEvent<HTMLInputElement>) => {
     setUserClass(e.target.value);
   };
