@@ -110,9 +110,27 @@ function ForwardButton({ children, ...props }: ComponentProps<'button'>) {
     pageForward();
   };
   return (
-    <button type="button" onClick={onClick} {...props}>
-      {children}
-    </button>
+    <>
+      <button type="button" onClick={onClick} {...props}>
+        {children}
+      </button>
+      <style jsx>
+        {`
+          button {
+            background-color: var(--accent-color);
+            padding: 12px 48px;
+            border-radius: 4px;
+            border: 0;
+            color: #ffffff;
+            font-weight: 700;
+          }
+          button:disabled {
+            background-color: #b1d9f0;
+            cursor: not-allowed;
+          }
+        `}
+      </style>
+    </>
   );
 }
 
@@ -126,9 +144,21 @@ function BackButton({ children, ...props }: ComponentProps<'button'>) {
     pageBack();
   };
   return (
-    <button onClick={onClick} {...props}>
-      {children}
-    </button>
+    <>
+      <button onClick={onClick} {...props}>
+        {children}
+      </button>
+      <style jsx>{`
+        button {
+          border: 1px solid var(--accent-color);
+          padding: 12px 48px;
+          border-radius: 4px;
+          color: var(--accent-color);
+          background-color: #ffffff;
+          font-weight: 700;
+        }
+      `}</style>
+    </>
   );
 }
 

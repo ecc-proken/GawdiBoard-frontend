@@ -20,16 +20,18 @@ function Message() {
           name="message"
           onChange={onMessageChange}
           value={message}
-          aria-label="募集主へのメッセージ"
+          aria-label="募集主に伝えたいこと"
         ></textarea>
       </div>
       <div className="page-controller">
-        <BackButton>← 戻る</BackButton>
+        <BackButton>戻る</BackButton>
         <button type="submit">送信</button>
       </div>
       <style jsx>{`
         .instruction {
-          margin-bottom: 4px;
+          font-weight: 700;
+          font-size: 1.2rem;
+          margin-bottom: 20px;
         }
         .message_wrapper {
           text-align: center;
@@ -40,6 +42,8 @@ function Message() {
           padding: 8px;
           max-width: 420px;
           margin-bottom: 24px;
+          border-radius: 4px;
+          border: 1px solid #cdcdcd;
         }
         .page-controller {
           display: flex;
@@ -47,12 +51,12 @@ function Message() {
           justify-content: space-evenly;
         }
         .page-controller button {
-          border-radius: 8px;
+          border-radius: 4px;
           border: 0;
-          padding: 8px 24px;
+          padding: 12px 48px;
           color: #ffffff;
-          background-color: #25a5ec;
-          font-weight: 800;
+          background-color: var(--accent-color);
+          font-weight: 700;
         }
         .page-controller button:hover {
           background-color: #36b3f7;

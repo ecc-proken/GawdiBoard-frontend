@@ -30,7 +30,7 @@ function InterestLevel() {
   return (
     <>
       <div className="interest-selector">
-        <p className="instruction">この募集にどのくらい興味がありますか？</p>
+        <p className="instruction">現在の興味度を選択してください</p>
         <button
           type="button"
           className={`interest-option ${interest === 1 ? 'selected' : ''}`}
@@ -60,7 +60,9 @@ function InterestLevel() {
       </div>
       <style jsx>{`
         .instruction {
-          margin-bottom: 16px;
+          font-weight: 700;
+          font-size: 1.2rem;
+          margin-bottom: 20px;
         }
         .interest-selector {
           text-align: center;

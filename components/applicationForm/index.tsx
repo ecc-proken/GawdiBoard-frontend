@@ -2,12 +2,13 @@ import { createContext, useContext, useState } from 'react';
 import type { Dispatch, MouseEvent, ReactNode, SetStateAction } from 'react';
 import { useApplyOffer } from '../../hooks/requests/offers';
 import {
+  ForwardButton,
   OrderedPages,
   Page,
-  Indicator,
   useOrderedPages,
 } from '../OrderedPages';
 import Completed from './Completed';
+import Indicator from './Indicator';
 import InterestLevel from './InterestLevel';
 import Message from './Message';
 import UserClass from './UserClass';
@@ -43,22 +44,21 @@ function PagedApplyForm({ offerId, children }: PagedApplyFormProps) {
 
   const onSubmit = (e: MouseEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutate(
-      {
-        offer_id: offerId,
-        interest: interest || 1,
-        user_class: userClass,
-        message,
-      },
-      {
-        onSuccess() {
-          pageForward();
-        },
-      }
-    );
+    // mutate(
+    //   {
+    //     offer_id: offerId,
+    //     interest: interest || 1,
+    //     user_class: userClass,
+    //     message,
+    //   },
+    //   {
+    //     onSuccess() {
+    //       pageForward();
+    //     },
+    //   }
+    // );
+    pageForward();
   };
-
-  console.log(isLoading);
 
   return (
     <ApplyFormContext.Provider
@@ -100,29 +100,29 @@ type ApplyFormProps = {
 function ApplyForm({ offerId }: ApplyFormProps) {
   return (
     <OrderedPages>
+      <div className="indicator">
+        <Indicator />
+      </div>
       <PagedApplyForm offerId={offerId}>
         <Page>
-          <div className="indicator">
-            <Indicator />
-          </div>
           <InterestLevel />
         </Page>
         <Page>
-          <div className="indicator">
-            <Indicator />
-          </div>
           <UserClass />
         </Page>
         <Page>
-          <div className="indicator">
-            <Indicator />
-          </div>
           <Message />
         </Page>
         <Page>
           <Completed />
         </Page>
       </PagedApplyForm>
+      <style jsx>{`
+        .indicator {
+          text-align: center;
+          margin-bottom: 12px;
+        }
+      `}</style>
     </OrderedPages>
   );
 }
