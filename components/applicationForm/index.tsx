@@ -36,7 +36,7 @@ type PagedApplyFormProps = {
 
 function PagedApplyForm({ offerId, children }: PagedApplyFormProps) {
   const { pageForward } = useOrderedPages();
-  const { mutate } = useApplyOffer();
+  const { mutate, isLoading, isError } = useApplyOffer();
   const [interest, setInterest] = useState<number | null>(null);
   const [userClass, setUserClass] = useState('');
   const [message, setMessage] = useState('');
@@ -58,6 +58,8 @@ function PagedApplyForm({ offerId, children }: PagedApplyFormProps) {
     );
   };
 
+  console.log(isLoading);
+
   return (
     <ApplyFormContext.Provider
       value={{
@@ -70,6 +72,23 @@ function PagedApplyForm({ offerId, children }: PagedApplyFormProps) {
       }}
     >
       <form onSubmit={onSubmit}>{children}</form>
+      {isLoading && <p className="message load">データを送信中...</p>}
+      {isError && (
+        <p className="message error">
+          データの送信に失敗しました。しばらくしてから再度送信してください。
+        </p>
+      )}
+      <style jsx>{`
+        .message {
+          margin-top: 12px;
+          text-align: center;
+        }
+        .message.error {
+          margin-top: 12px;
+          text-align: center;
+          color: #ff0000;
+        }
+      `}</style>
     </ApplyFormContext.Provider>
   );
 }
