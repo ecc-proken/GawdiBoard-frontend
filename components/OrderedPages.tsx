@@ -56,6 +56,8 @@ function recursiveMap(
         children: recursiveMap(child.props.children, callback),
       });
     }
+
+    return child;
   });
 }
 
@@ -130,30 +132,4 @@ function BackButton({ children, ...props }: ComponentProps<'button'>) {
   );
 }
 
-function Indicator() {
-  const { pageCount, activeIndex } = useOrderedPages();
-
-  const pageIndices = Array.from(Array(pageCount).keys());
-  const indices = pageIndices.map((index) => (
-    <Fragment key={index}>
-      <span>・</span>
-      <style jsx>{`
-        span {
-          font-size: 1.6rem;
-          color: ${index === activeIndex ? 'tomato' : 'black'};
-        }
-      `}</style>
-    </Fragment>
-  ));
-
-  return <>{indices}</>;
-}
-
-export {
-  OrderedPages,
-  Page,
-  ForwardButton,
-  BackButton,
-  useOrderedPages,
-  Indicator,
-};
+export { OrderedPages, Page, ForwardButton, BackButton, useOrderedPages };
