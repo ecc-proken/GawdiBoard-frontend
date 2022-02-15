@@ -2,10 +2,13 @@ import { useRouter } from 'next/router';
 import type { ReactElement } from 'react';
 import Layout from '../../../components/layouts/Layout';
 import { useProfileForm } from '../../../hooks/forms/useProfileForm';
+import { useLoginUser } from '../../../hooks/requests/auth';
 import { useEditUser } from '../../../hooks/requests/profile';
-import { user } from '../../../mocks/handlers/auth';
 
 function EditProfilePage() {
+  const { data } = useLoginUser();
+  const user = data?.user;
+
   const {
     register,
     handleSubmit,
@@ -19,14 +22,14 @@ function EditProfilePage() {
   const onSubmit = handleSubmit((data) => {
     mutate(data, {
       onSuccess: () => {
-        router.push(`/user/${user.student_number}`);
+        router.push(`/user/${user?.student_number}`);
       },
     });
   });
 
   const handleCancel = () => {
     if (confirm('入力内容を破棄しますか?')) {
-      router.push(`/user/${user.student_number}`);
+      router.push(`/user/${user?.student_number}`);
     }
   };
 
