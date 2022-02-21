@@ -2,15 +2,7 @@ import { rest } from 'msw';
 import { user } from './auth';
 
 export const profileHandlers = [
-  rest.get('/user/regist', (req, res, ctx) => {
-    return res(
-      ctx.status(201),
-      ctx.json({
-        user,
-      })
-    );
-  }),
-  rest.post('/mock/user/edit', (req, res, ctx) => {
+  rest.get('/api/user/single', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -18,7 +10,7 @@ export const profileHandlers = [
       })
     );
   }),
-  rest.get('/user/regist-email', (req, res, ctx) => {
+  rest.get('api/user/regist', (req, res, ctx) => {
     return res(
       ctx.status(201),
       ctx.json({
@@ -26,7 +18,23 @@ export const profileHandlers = [
       })
     );
   }),
-  rest.post('/mock/user/edit-email', (req, res, ctx) => {
+  rest.post('/api/user/edit', (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json({
+        user,
+      })
+    );
+  }),
+  rest.get('/api/user/regist-email', (req, res, ctx) => {
+    return res(
+      ctx.status(201),
+      ctx.json({
+        user,
+      })
+    );
+  }),
+  rest.post('/api/user/edit-email', (req, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({

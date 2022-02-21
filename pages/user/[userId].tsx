@@ -7,7 +7,8 @@ import Header from '../../components/layouts/Header';
 import Layout from '../../components/layouts/Layout';
 import OfferOverview from '../../components/OfferOverview';
 import UserOfferProvider from '../../components/UserOfferProvider';
-import { user } from '../../mocks/handlers/auth';
+import { useLoginUser } from '../../hooks/requests/auth';
+import { useUser } from '../../hooks/requests/profile';
 
 function UserProfilePage() {
   // https://github.com/reactjs/react-tabs#resetidcounter-void
@@ -60,59 +61,67 @@ function UserProfilePage() {
   const router = useRouter();
   const userId = router.query.userId as string;
 
-  // TODO: userログインユーザーと取得したユーザー情報を比較する
-  const isLoginUser = userId === user.student_number.toString();
+  const { data: user } = useUser({ student_number: userId }, router.isReady);
+
+  const { data: loginUser } = useLoginUser();
+  const isLoginUser = userId === loginUser?.user.student_number.toString();
 
   return (
     <div>
       <h1>ユーザー詳細</h1>
-      <div className="user-info">
-        <p>学籍番号: {user.student_number}</p>
-        <p>名前: {user.user_name}</p>
-        <p className="self-introduction">{user.self_introduction}</p>
-        <p>
-          Webサイト: <a href={user.link}>{user.link}</a>
-        </p>
-        {isLoginUser && (
-          <div>
-            <Link href="/user/edit/profile">
-              <a className="edit-link">プロフィールを編集</a>
-            </Link>
-            <Link href="/user/edit/email">
-              <a className="edit-link">登録メールアドレスを編集</a>
-            </Link>
+      {user ? (
+        <div>
+          <div className="user-info">
+            <p>学籍番号: {user.user.student_number}</p>
+            <p>名前: {user.user.user_name}</p>
+            <p className="self-introduction">{user.user.self_introduction}</p>
+            <p>
+              Webサイト: <a href={user.user.link}>{user.user.link}</a>
+            </p>
+            {isLoginUser && (
+              <div>
+                <Link href="/user/edit/profile">
+                  <a className="edit-link">プロフィールを編集</a>
+                </Link>
+                <Link href="/user/edit/email">
+                  <a className="edit-link">登録メールアドレスを編集</a>
+                </Link>
+              </div>
+            )}
           </div>
-        )}
-      </div>
-      <h2>{user.user_name}さんの投稿</h2>
-      <Tabs selectedTabClassName="selected-tab">
-        <TabList className={`tab-list ${scopedTabListClass}`}>
-          <Tab className={tabClass}>募集</Tab>
-          <Tab className={tabClass}>宣伝</Tab>
-          <Tab className={tabClass}>作品</Tab>
-        </TabList>
-        <TabPanel className={tabPanelClass}>
-          <UserOfferProvider studentNumber={userId}>
-            {({ data }) =>
-              data
-                ? data.offers.map((offer) => (
-                    <OfferOverview
-                      key={offer.id}
-                      offer={offer}
-                      editable={isLoginUser}
-                    ></OfferOverview>
-                  ))
-                : 'ロード中'
-            }
-          </UserOfferProvider>
-        </TabPanel>
-        <TabPanel className={tabPanelClass}>
-          <h3>宣伝</h3>
-        </TabPanel>
-        <TabPanel className={tabPanelClass}>
-          <h3>作品</h3>
-        </TabPanel>
-      </Tabs>
+          <h2>{user.user.user_name}さんの投稿</h2>
+          <Tabs selectedTabClassName="selected-tab">
+            <TabList className={`tab-list ${scopedTabListClass}`}>
+              <Tab className={tabClass}>募集</Tab>
+              <Tab className={tabClass}>宣伝</Tab>
+              <Tab className={tabClass}>作品</Tab>
+            </TabList>
+            <TabPanel className={tabPanelClass}>
+              <UserOfferProvider studentNumber={userId}>
+                {({ data }) =>
+                  data
+                    ? data.offers.map((offer) => (
+                        <OfferOverview
+                          key={offer.id}
+                          offer={offer}
+                          editable={isLoginUser}
+                        ></OfferOverview>
+                      ))
+                    : 'ロード中'
+                }
+              </UserOfferProvider>
+            </TabPanel>
+            <TabPanel className={tabPanelClass}>
+              <h3>宣伝</h3>
+            </TabPanel>
+            <TabPanel className={tabPanelClass}>
+              <h3>作品</h3>
+            </TabPanel>
+          </Tabs>
+        </div>
+      ) : (
+        <p>ロード中...</p>
+      )}
       <style jsx>
         {`
           .user-info {

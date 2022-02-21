@@ -1,4 +1,5 @@
 import { useQuery } from 'react-query';
+import { API_HOST } from '../../utils/configs';
 import { jsonClient } from '../../utils/httpClient';
 
 type Tag = {
@@ -21,7 +22,7 @@ function useTags({ tag_genre_id }: GetTagsRequest) {
   return useQuery<GetTagsResponse, Error>(
     ['tags', { tag_genre_id }],
     () =>
-      jsonClient('/tag-list', {
+      jsonClient(API_HOST + '/tag-list', {
         params: {
           tag_genre_id,
         },

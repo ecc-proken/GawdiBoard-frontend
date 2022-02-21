@@ -1,8 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from 'next/link';
+import { useLoginUser } from '../../hooks/requests/auth';
 import NavLink from '../NavLink';
 
 export default function Header() {
+  const { data } = useLoginUser();
+
   return (
     <>
       <header>
@@ -47,17 +50,19 @@ export default function Header() {
             </ul>
           </nav>
         </div>
-        <div>
-          <Link href="/user/2180372">
-            <a aria-label="プロフィール画面へ">
-              <img
-                alt="ユーザーアイコン"
-                className="user-icon"
-                src="https://placeimg.com/200/200/animals"
-              ></img>
-            </a>
-          </Link>
-        </div>
+        {data ? (
+          <div>
+            <Link href={`/user/${data.user.student_number}`}>
+              <a aria-label="プロフィール画面へ">
+                <div className="user-icon"></div>
+              </a>
+            </Link>
+          </div>
+        ) : (
+          <div>
+            <Link href="/login">ログイン</Link>
+          </div>
+        )}
       </header>
       <style jsx>{`
         header {
@@ -82,8 +87,10 @@ export default function Header() {
         }
         .user-icon {
           width: 50px;
+          height: 50px;
           clip-path: circle(50%);
           margin-right: 40px;
+          background-color: gray;
         }
         nav {
           display: inline-block;
