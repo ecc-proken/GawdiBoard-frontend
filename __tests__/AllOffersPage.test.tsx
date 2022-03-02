@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import AllOffersPage from '../board/offers';
+import AllOffersPage from '../pages/board/offers';
 
 const fakeQueryClient = new QueryClient({
   defaultOptions: {

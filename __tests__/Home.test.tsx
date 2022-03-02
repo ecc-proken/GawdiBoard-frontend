@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { renderWithClient } from '../../contexts/testUtils';
-import Home from '../index';
+import { renderWithClient } from '../contexts/testUtils';
+import Home from '../pages/index';
 
 // TODO: 後で消す
 describe('Home', () => {
